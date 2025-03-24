@@ -10,4 +10,4 @@
 ###< symfony/framework-bundle ###
 
 /.vscode/*
-database.db
+*.session.sql
