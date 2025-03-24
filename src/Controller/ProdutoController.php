@@ -2,20 +2,36 @@
 
 namespace App\Controller;
 
-use App\Service\DatabaseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\ProdutoRepository;
+use App\Entity\Produto;
 
 class ProdutoController extends AbstractController
 {
-    #[Route('/produto/lista')]
-    public function lista()
-    {
-        $db = DatabaseService::getInstance();
-        $stmt = $db->query("SELECT * FROM PRODUTO;");
-        $produtos = $stmt->fetchArray(SQLITE3_ASSOC);
 
-        return $this->json($produtos);
+
+    #[Route('/produtos', name: 'produto_lista', methods: ['GET'])]
+    public function lista(ProdutoRepository $produtoRepository): JsonResponse
+    {
+        $result = $produtoRepository->lista();
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/produtos', name: 'produto_cria', methods: ['POST'])]
+    public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse
+    {
+        $result = $produtoRepository->cria($request);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
     }
 }

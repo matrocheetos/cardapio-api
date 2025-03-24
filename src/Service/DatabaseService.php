@@ -17,4 +17,27 @@ class DatabaseService
         }
         return self::$instance;
     }
+
+    public static function fetch(\SQLite3Result $results, $mode = SQLITE3_ASSOC) : array
+    {
+        $arr = [];
+        while($result = $results->fetchArray($mode)) {
+            $arr[] = $result;
+        }
+        return $arr;
+    }
+
+    public static function bind(\SQLite3Stmt $stmt, array $params): \SQLite3Stmt
+    {
+        foreach ($params as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue($key, $value, SQLITE3_INTEGER);
+            } elseif (is_float($value)) {
+                $stmt->bindValue($key, $value, SQLITE3_FLOAT);
+            } else {
+                $stmt->bindValue($key, $value, SQLITE3_TEXT);
+            }
+        }
+        return $stmt;
+    }
 }
