@@ -43,7 +43,16 @@ class Produto
     public function getProdutos(): array
     {
         $sql = "
-            SELECT * FROM PRODUTO;
+            SELECT
+                NOME,
+                DESCRICAO,
+                IMAGEM,
+                PRECO,
+                EH_VEGANO,
+                EH_SEM_GLUTEN,
+                PORCOES,
+                CATEGORIA
+            FROM PRODUTO;
         ";
         
         $db = DatabaseService::getInstance();
@@ -53,7 +62,7 @@ class Produto
         return DatabaseService::fetch($result);
     }
 
-    public function setProduto(string $nome, string $descricao, string $imagem = null, float $preco, bool $ehVegano, bool $ehSemGluten, int $porcoes, int $categoria)
+    public function setProduto(string $nome, string $descricao, string $imagem = null, float $preco, bool $ehVegano, bool $ehSemGluten, int $porcoes, int $categoria): array|bool
     {
         $sql = "
             INSERT INTO PRODUTO (NOME, DESCRICAO, IMAGEM, PRECO, EH_VEGANO, EH_SEM_GLUTEN, PORCOES, CATEGORIA)
