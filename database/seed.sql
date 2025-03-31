@@ -1,9 +1,23 @@
-INSERT INTO PRODUTO (NOME, DESCRICAO, IMAGEM, PRECO, EH_VEGANO, EH_SEM_GLUTEN, PORCOES, CATEGORIA) VALUES
-('Salada Caesar', 'Salada com alface, croutons e molho especial', 'salada_caesar.jpg', 25.90, 0, 0, 2, 1),
-('Risoto de Cogumelos', 'Risoto cremoso com mix de cogumelos', 'risoto_cogumelos.jpg', 39.90, 1, 1, 2, 2),
-('Pizza Margherita', 'Pizza clássica com molho de tomate, muçarela e manjericão', 'pizza_margherita.jpg', 49.90, 0, 0, 4, 3);
+INSERT INTO RESTAURANTE (ID_RESTAURANTE, NOME, LOGO, COR_PRIM_1, COR_PRIM_2, COR_PRIM_3) 
+VALUES (1, 'Meu Restaurante', 'logo.png', '#FF5733', '#C70039', '#900C3F');
 
-INSERT INTO MESA (ID_MESA, COMANDA, PEDIDO) VALUES
-(1, 1001, 'Pizza Margherita, Suco de Laranja'),
-(2, 1002, 'Risoto de Cogumelos, Água com Gás'),
-(3, 1003, 'Salada Caesar, Chá Gelado');
+INSERT INTO CATEGORIA (DESCRICAO) VALUES 
+('Entradas'),
+('Pratos Principais'),
+('Sobremesas'),
+('Bebidas');
+
+INSERT INTO PRODUTO (NOME, DESCRICAO, IMAGEM, PRECO, EH_VEGANO, EH_SEM_GLUTEN, PORCOES, CATEGORIA) VALUES 
+('Salada Caesar',       'Salada com molho especial e croutons', 'salada.jpg', 25.90, 0, 0, 1, 1), 
+('Risoto de Cogumelos', 'Risoto cremoso de cogumelos frescos',  'risoto.jpg', 42.50, 1, 1, 1, 2), 
+('Bolo de Chocolate',   'Bolo feito com cacau 70%',             'bolo.jpg',   18.00, 0, 1, 1, 3), 
+('Suco de Laranja',     'Suco natural de laranja',              'suco.jpg',   10.00, 1, 1, 1, 4);
+
+INSERT INTO MESA (NRO_MESA, STATUS_PAGAMENTO) VALUES 
+(1, 0),
+(2, 1);
+
+INSERT INTO PEDIDO (COMANDA, ID_PRODUTO, OBSERVACAO, STATUS_PEDIDO) VALUES 
+(1, 1, NULL, 'PREPARANDO'),
+(1, 2, NULL, 'PRONTO'),
+(2, 4, 'Sem gelo', 'ENTREGUE');
