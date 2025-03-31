@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoriaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,17 @@ class ProdutoController extends AbstractController
         ], $result['status']);
     }
 
+    #[Route('/produtos/{id}', name: 'produto_lista_id', methods: ['GET'])]
+    public function listaId(int $id, ProdutoRepository $produtoRepository): JsonResponse
+    {
+        $result = $produtoRepository->listaId($id);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
     #[Route('/produtos', name: 'produto_cria', methods: ['POST'])]
     public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse
     {
@@ -65,10 +77,21 @@ class ProdutoController extends AbstractController
         ], $result['status']);
     }
 
-    #[Route('/categoria', name: 'categoria_lista', methods: ['GET'])]
-    public function listaCategoria(ProdutoRepository $produtoRepository)
+    #[Route('/categorias', name: 'categoria_lista', methods: ['GET'])]
+    public function listaCategoria(CategoriaRepository $categoriaRepository)
     {
-        $result = $produtoRepository->listaCategoria();
+        $result = $categoriaRepository->lista();
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/categorias/{id}', name: 'categoria_lista_id', methods: ['GET'])]
+    public function listaCategoriaId(CategoriaRepository $categoriaRepository, int $id)
+    {
+        $result = $categoriaRepository->listaId($id);
 
         return $this->json([
             'msg'    => $result['msg'],
