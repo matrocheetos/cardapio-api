@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\CategoriaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +32,8 @@ class ProdutoController extends AbstractController
                                 new OA\Property(property: "DESCRICAO", type: "string"),
                                 new OA\Property(property: "IMAGEM", type: "string"),
                                 new OA\Property(property: "PRECO", type: "number", format: "float"),
-                                new OA\Property(property: "EH_VEGANO", type: "bool"),
-                                new OA\Property(property: "EH_SEM_GLUTEN", type: "bool"),
+                                new OA\Property(property: "EH_VEGANO", type: "integer"),
+                                new OA\Property(property: "EH_SEM_GLUTEN", type: "integer"),
                                 new OA\Property(property: "PORCOES", type: "integer"),
                                 new OA\Property(property: "CATEGORIA", type: "integer"),
                             ]
@@ -70,28 +69,6 @@ class ProdutoController extends AbstractController
     public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse
     {
         $result = $produtoRepository->cria($request);
-
-        return $this->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result']
-        ], $result['status']);
-    }
-
-    #[Route('/categorias', name: 'categoria_lista', methods: ['GET'])]
-    public function listaCategoria(CategoriaRepository $categoriaRepository)
-    {
-        $result = $categoriaRepository->lista();
-
-        return $this->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result']
-        ], $result['status']);
-    }
-
-    #[Route('/categorias/{id}', name: 'categoria_lista_id', methods: ['GET'])]
-    public function listaCategoriaId(CategoriaRepository $categoriaRepository, int $id)
-    {
-        $result = $categoriaRepository->listaId($id);
 
         return $this->json([
             'msg'    => $result['msg'],

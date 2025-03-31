@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Service\DatabaseService;
 use App\Repository\ProdutoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +12,7 @@ class Produto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $idProduto = null;
+    private ?int $id_produto = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nome = null;
@@ -28,10 +27,10 @@ class Produto
     private ?float $preco = null;
 
     #[ORM\Column]
-    private ?bool $ehVegano = null;
+    private ?bool $eh_vegano = null;
 
     #[ORM\Column]
-    private ?bool $ehSemGluten = null;
+    private ?bool $eh_sem_gluten = null;
 
     #[ORM\Column]
     private ?int $porcoes = null;

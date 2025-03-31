@@ -3,41 +3,47 @@
 namespace App\Repository;
 
 use App\Entity\Mesa;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Service\DatabaseService;
+use App\Repository\BaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Mesa>
+ * @extends BaseRepository<Mesa>
  */
-class MesaRepository extends ServiceEntityRepository
+class MesaRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, DatabaseService $databaseService)
     {
-        parent::__construct($registry, Mesa::class);
+        parent::__construct($registry, Mesa::class, $databaseService);
     }
 
-    //    /**
-    //     * @return Mesa[] Returns an array of Mesa objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function cria($request): array
+    {
+        $data = json_decode($request->getContent(), true);
 
-    //    public function findOneBySomeField($value): ?Mesa
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $mesa = new Mesa();
+
+        $sql = "
+            INSERT INTO MESA (NRO_MESA)
+            VALUES (:nro_mesa)
+        ";
+
+        $params = [
+            ':nro_mesa' => $data['nro_mesa']
+        ];
+
+        try {
+            $resultMesa = $this->db->insere($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao cadastrar produto: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        $sql = "
+            INSERT INTO PEDIDO 
+        ";
+    }
 }

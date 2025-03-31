@@ -23,6 +23,7 @@ class ProdutoRepository extends BaseRepository
 
         $sql = "
             SELECT
+                ID_PRODUTO,
                 NOME,
                 DESCRICAO,
                 IMAGEM,
@@ -51,7 +52,47 @@ class ProdutoRepository extends BaseRepository
         ];
     }
 
-    public function cria($request)
+    public function listaId($id): array
+    {
+        $produto = new Produto();
+
+        $sql = "
+            SELECT
+                ID_PRODUTO,
+                NOME,
+                DESCRICAO,
+                IMAGEM,
+                PRECO,
+                EH_VEGANO,
+                EH_SEM_GLUTEN,
+                PORCOES,
+                CATEGORIA
+            FROM PRODUTO
+            WHERE ID = :id;
+        ";
+
+        $params = [
+            ':id' => $id
+        ];
+
+        try {
+            $result = $this->db->consulta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao listar produtos: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $result
+        ];
+    }
+
+    public function cria($request): array
     {
         $data = json_decode($request->getContent(), true);
 

@@ -6,32 +6,25 @@ use App\Repository\CategoriaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoriaRepository::class)]
+#[ORM\Table(name: 'CATEGORIA')]
 class Categoria
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
-    private ?int $idCategoria = null;
+    private ?int $id_categoria = null;
 
     #[ORM\Column(length: 255)]
     private ?string $descricao = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getIdCategoria(): ?int
     {
-        return $this->idCategoria;
+        return $this->id_categoria;
     }
 
-    public function setIdCategoria(int $idCategoria): static
+    public function setIdCategoria(int $id_categoria): static
     {
-        $this->idCategoria = $idCategoria;
+        $this->id_categoria = $id_categoria;
 
         return $this;
     }

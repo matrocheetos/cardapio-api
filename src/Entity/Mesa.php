@@ -12,33 +12,13 @@ class Mesa
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
-    private ?int $idMesa = null;
-
-    #[ORM\Column(nullable: true)]
     private ?int $comanda = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $pedido = null;
+    #[ORM\Column]
+    private ?int $nro_mesa = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getIdMesa(): ?int
-    {
-        return $this->idMesa;
-    }
-
-    public function setIdMesa(int $idMesa): static
-    {
-        $this->idMesa = $idMesa;
-
-        return $this;
-    }
+    #[ORM\Column]
+    private ?int $status_pagamento = null;
 
     public function getComanda(): ?int
     {
@@ -52,14 +32,26 @@ class Mesa
         return $this;
     }
 
-    public function getPedido(): ?string
+    public function getNroMesa(): ?int
     {
-        return $this->pedido;
+        return $this->nro_mesa;
     }
 
-    public function setPedido(?string $pedido): static
+    public function setNroMesa(int $nro_mesa): static
     {
-        $this->pedido = $pedido;
+        $this->nro_mesa = $nro_mesa;
+
+        return $this;
+    }
+
+    public function getStatusPagamento(): ?int
+    {
+        return $this->status_pagamento;
+    }
+
+    public function setStatusPagamento(int $status_pagamento): static
+    {
+        $this->status_pagamento = $status_pagamento;
 
         return $this;
     }
