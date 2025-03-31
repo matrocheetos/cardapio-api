@@ -4,20 +4,17 @@ namespace App\Repository;
 
 use App\Entity\Categoria;
 use App\Service\DatabaseService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\BaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Categoria>
+ * @extends BaseRepository<Categoria>
  */
-class CategoriaRepository extends ServiceEntityRepository
+class CategoriaRepository extends BaseRepository
 {
-    private \SQLite3 $db;
-
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, DatabaseService $databaseService)
     {
-        parent::__construct($registry, Categoria::class);
-        $this->db = DatabaseService::getInstance();
+        parent::__construct($registry, Categoria::class, $databaseService);
     }
 
     public function lista(): array
@@ -32,9 +29,7 @@ class CategoriaRepository extends ServiceEntityRepository
         ";
 
         try {
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute();
-            $result = DatabaseService::fetch($result);
+            $result = $this->db->consulta($sql);
         } catch (\Exception $e) {
             return [
                 'status' => 400,
@@ -67,10 +62,7 @@ class CategoriaRepository extends ServiceEntityRepository
         ];
 
         try {
-            $stmt = $this->db->prepare($sql);
-            $stmt = DatabaseService::bind($stmt, $params);
-            $result = $stmt->execute();
-            $result = DatabaseService::fetch($result);
+            $result = $this->db->consulta($sql, $params);
         } catch (\Exception $e) {
             return [
                 'status' => 400,

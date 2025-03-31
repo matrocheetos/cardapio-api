@@ -3,25 +3,39 @@
 namespace App\Repository;
 
 use App\Entity\Produto;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Service\DatabaseService;
+use App\Repository\BaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Produto>
+ * @extends BaseRepository<Produto>
  */
-class ProdutoRepository extends ServiceEntityRepository
+class ProdutoRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, DatabaseService $databaseService)
     {
-        parent::__construct($registry, Produto::class);
+        parent::__construct($registry, Produto::class, $databaseService);
     }
 
     public function lista(): array
     {
         $produto = new Produto();
 
+        $sql = "
+            SELECT
+                NOME,
+                DESCRICAO,
+                IMAGEM,
+                PRECO,
+                EH_VEGANO,
+                EH_SEM_GLUTEN,
+                PORCOES,
+                CATEGORIA
+            FROM PRODUTO;
+        ";
+
         try {
-            $produtos = $produto->getProdutos();
+            $result = $this->db->consulta($sql);
         } catch (\Exception $e) {
             return [
                 'status' => 400,
@@ -33,7 +47,7 @@ class ProdutoRepository extends ServiceEntityRepository
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $produtos
+            'result' => $result
         ];
     }
 
@@ -52,8 +66,24 @@ class ProdutoRepository extends ServiceEntityRepository
         
         $produto = new Produto();
 
+        $sql = "
+            INSERT INTO PRODUTO (NOME, DESCRICAO, IMAGEM, PRECO, EH_VEGANO, EH_SEM_GLUTEN, PORCOES, CATEGORIA)
+            VALUES (:nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes, :categoria);
+        ";
+
+        $params = [
+            ':nome'          => $nome,
+            ':descricao'     => $descricao,
+            ':imagem'        => $imagem,
+            ':preco'         => $preco,
+            ':eh_vegano'     => $ehVegano,
+            ':eh_sem_gluten' => $ehSemGluten,
+            ':porcoes'       => $porcoes,
+            ':categoria'     => $categoria
+        ];
+
         try {
-            $result = $produto->setProduto($nome, $descricao, $imagem, $preco, $ehVegano, $ehSemGluten, $porcoes, $categoria);
+            $result = $this->db->insere($sql, $params);
         } catch (\Exception $e) {
             return [
                 'status' => 400,
