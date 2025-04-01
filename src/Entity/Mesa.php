@@ -15,10 +15,10 @@ class Mesa
     private ?int $comanda = null;
 
     #[ORM\Column]
-    private ?int $nro_mesa = null;
+    private ?int $nroMesa = null;
 
     #[ORM\Column]
-    private ?int $status_pagamento = null;
+    private ?int $statusPagamento = null;
 
     public function getComanda(): ?int
     {
@@ -34,24 +34,24 @@ class Mesa
 
     public function getNroMesa(): ?int
     {
-        return $this->nro_mesa;
+        return $this->nroMesa;
     }
 
-    public function setNroMesa(int $nro_mesa): static
+    public function setNroMesa(int $nroMesa): static
     {
-        $this->nro_mesa = $nro_mesa;
+        $this->nroMesa = $nroMesa;
 
         return $this;
     }
 
     public function getStatusPagamento(): ?int
     {
-        return $this->status_pagamento;
+        return $this->statusPagamento;
     }
 
-    public function setStatusPagamento(int $status_pagamento): static
+    public function setStatusPagamento(int $statusPagamento): static
     {
-        $this->status_pagamento = $status_pagamento;
+        $this->statusPagamento = $statusPagamento;
 
         return $this;
     }

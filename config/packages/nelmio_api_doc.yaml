@@ -4,6 +4,9 @@ nelmio_api_doc:
             title: Cardápio API
             description: API para cardápio digital.
             version: 1.0.0
+        components:
+            schemas: { }
+        paths: { }
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc

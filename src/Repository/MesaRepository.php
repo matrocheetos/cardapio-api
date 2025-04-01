@@ -42,8 +42,10 @@ class MesaRepository extends BaseRepository
             ];
         }
 
-        $sql = "
-            INSERT INTO PEDIDO 
-        ";
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $resultMesa
+        ];
     }
 }

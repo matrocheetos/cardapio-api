@@ -3,49 +3,62 @@
 namespace App\Entity;
 
 use App\Repository\PedidoRepository;
+use App\Enum\StatusPedido;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: PedidoRepository::class)]
 #[ORM\Table(name: 'PEDIDO')]
+#[OA\Schema(
+    schema: "Pedido",
+    description: "Modelo de Pedido no Cardápio",
+    type: "object"
+)]
 class Pedido
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    #[OA\Property(description: "ID do pedido", example: 1)]
+    private ?int $idPedido = null;
 
     #[ORM\Column]
-    private ?int $id_pedido = null;
-
-    #[ORM\Column]
+    #[OA\Property(description: "Número da comanda associada ao pedido", example: 1)]
     private ?int $comanda = null;
 
     #[ORM\Column]
-    private ?int $id_produto = null;
+    #[OA\Property(description: "Produto pedido (ID_PRODUTO)", example: 1)]
+    private ?int $idProduto = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[OA\Property(description: "Observação sobre o pedido", example: "Sem gelo")]
     private ?string $observacao = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $data_pedido = null;
+    #[OA\Property(description: "Data e hora do pedido", example: "2024-03-30T14:00:00Z")]
+    private ?DateTimeInterface $dataPedido = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $status_pedido = null;
+    #[ORM\Column(type: "string", length: 10, enumType: StatusPedido::class)]
+    #[OA\Property(description: "Status do pedido", example: "PREPARANDO", enum: ["PREPARANDO", "PRONTO", "ENTREGUE"])]
+    private ?StatusPedido $statusPedido = null;
 
-    public function getId(): ?int
+    public function __construct(int $comanda, int $idProduto, ?string $observacao = null)
     {
-        return $this->id;
+        $this->comanda = $comanda;
+        $this->idProduto = $idProduto;
+        $this->observacao = $observacao;
     }
 
     public function getIdPedido(): ?int
     {
-        return $this->id_pedido;
+        return $this->idPedido;
     }
 
-    public function setIdPedido(int $id_pedido): static
+    public function setIdPedido(int $idPedido): static
     {
-        $this->id_pedido = $id_pedido;
+        $this->id_pedido = $idPedido;
 
         return $this;
     }
@@ -64,12 +77,12 @@ class Pedido
 
     public function getIdProduto(): ?int
     {
-        return $this->id_produto;
+        return $this->idProduto;
     }
 
-    public function setIdProduto(int $id_produto): static
+    public function setIdProduto(int $idProduto): static
     {
-        $this->id_produto = $id_produto;
+        $this->idProduto = $idProduto;
 
         return $this;
     }
@@ -86,27 +99,34 @@ class Pedido
         return $this;
     }
 
-    public function getDataPedido(): ?\DateTimeInterface
+    public function getDataPedido(): ?DateTimeInterface
     {
-        return $this->data_pedido;
+        return $this->dataPedido;
     }
 
-    public function setDataPedido(\DateTimeInterface $data_pedido): static
+    public function setDataPedido(string $dataPedido): static
     {
-        $this->data_pedido = $data_pedido;
+        $this->dataPedido = new \DateTime($dataPedido);
 
         return $this;
     }
 
-    public function getStatusPedido(): ?string
+    public function getStatusPedido(): ?StatusPedido
     {
-        return $this->status_pedido;
+        return $this->statusPedido;
     }
 
-    public function setStatusPedido(string $status_pedido): static
+    public function setStatusPedido(StatusPedido|string $statusPedido): static
     {
-        $this->status_pedido = $status_pedido;
-
+        if (is_string($statusPedido)) {
+            if (!StatusPedido::tryFrom($statusPedido)) {
+                throw new \InvalidArgumentException("Status inválido: $statusPedido. Valores permitidos: PREPARANDO, PRONTO, ENTREGUE.");
+            }
+            $statusPedido = StatusPedido::from($statusPedido);
+        }
+    
+        $this->statusPedido = $statusPedido;
+    
         return $this;
     }
 }

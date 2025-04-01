@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class MesaController extends AbstractController
 {
-    #[Route('/mesa', name: 'mesa_lista')]
+    #[Route('/mesa', name: 'mesa_lista', methods: ['GET'])]
     public function lista(): JsonResponse
     {
         return $this->json([
@@ -19,6 +19,7 @@ final class MesaController extends AbstractController
         ]);
     }
 
+    #[Route('/mesa', name: 'mesa_cria', methods: ['POST'])]
     public function cria(Request $request, MesaRepository $mesaRepository): JsonResponse
     {
         $result = $mesaRepository->cria($request);

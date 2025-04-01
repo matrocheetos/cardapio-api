@@ -68,11 +68,11 @@ class ProdutoRepository extends BaseRepository
                 PORCOES,
                 CATEGORIA
             FROM PRODUTO
-            WHERE ID = :id;
+            WHERE ID_PRODUTO = :id_produto;
         ";
 
         $params = [
-            ':id' => $id
+            ':id_produto' => $id
         ];
 
         try {

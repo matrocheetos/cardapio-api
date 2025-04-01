@@ -57,11 +57,11 @@ class DatabaseService
         return self::fetch($stmt->execute());
     }
 
-    public function insere(string $sql, array $params)
+    public function insere(string $sql, array $params): array|bool
     {
         $stmt = self::$instance->prepare($sql);
         $stmt = self::bind($stmt, $params);
-        
-        return $stmt->execute()->fetchArray();
+
+        return $stmt->execute()->fetchArray(SQLITE3_ASSOC);
     }
 }
