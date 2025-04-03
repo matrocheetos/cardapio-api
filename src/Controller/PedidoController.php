@@ -57,7 +57,9 @@ final class PedidoController extends AbstractController
             content: new OA\JsonContent(
                 type: "object",
                 properties: [
-                    new OA\Property(ref: "#/components/schemas/Pedido")
+                    new OA\Property(property: "comanda", type: "integer", example: 1, description: "Número da comanda associada ao pedido"),
+                    new OA\Property(property: "idProduto", type: "integer", example: 3, description: "ID do produto solicitado"),
+                    new OA\Property(property: "observacao", type: "string", example: "Sem cebola", description: "Observação opcional para o pedido")
                 ]
             )
         ),
@@ -68,7 +70,8 @@ final class PedidoController extends AbstractController
                 content: new OA\JsonContent(
                     type: "object",
                     properties: [
-                        new OA\Property(property: "msg", type: "string", example: "Pedido registrado com sucesso")
+                        new OA\Property(property: "msg", type: "string", example: "Pedido registrado com sucesso"),
+                        new OA\Property(property: "status", type: "string", example: "success")
                     ]
                 )
             ),
@@ -79,16 +82,26 @@ final class PedidoController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $pedido = new Pedido(
-            $data['comanda'],
-            $data['idProduto'],
-            $data['observacao']
-        );
+        foreach ($data as $p) {
+            $pedido = new Pedido(
+                $p['comanda'],
+                $p['idProduto'],
+                $p['observacao']
+            );
 
-        $result = $pedidoRepository->cria($pedido);
+            $result = $pedidoRepository->cria($pedido);
+            
+            if($result['status'] === 400) {
+                return $this->json([
+                    'msg'    => $result['msg'],
+                    'status' => 'error'
+                ], $result['status']);
+            }
+        }
 
         return $this->json([
-            'msg' => $result['msg']
+            'msg'    => $result['msg'],
+            'status' => 'success'
         ], $result['status']);
     }
 }

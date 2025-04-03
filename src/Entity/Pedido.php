@@ -29,11 +29,11 @@ class Pedido
     private ?int $comanda = null;
 
     #[ORM\Column]
-    #[OA\Property(description: "Produto pedido (ID_PRODUTO)", example: 1)]
+    #[OA\Property(description: "ID do produto solicitado", example: 1)]
     private ?int $idProduto = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[OA\Property(description: "Observação sobre o pedido", example: "Sem gelo")]
+    #[OA\Property(description: "Observação opcional sobre o pedido", example: "Sem gelo")]
     private ?string $observacao = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
