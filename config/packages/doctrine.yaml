@@ -4,7 +4,6 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         charset: 'UTF8'
         memory: false
-        path: '%kernel.project_dir%/var/database.db'
         use_savepoints: true
 
     orm:
