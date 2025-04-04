@@ -14,8 +14,6 @@ add('writable_dirs', []);
 // Hosts
 
 host('pratofacil.dynv6.net')
-    ->set('provision_user', 'ubuntu')
-    ->set('become', 'root')
     ->set('remote_user', 'deployer')
     ->set('deploy_path', '~/cardapio-api');
 
