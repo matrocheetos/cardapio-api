@@ -10,8 +10,8 @@
         "doctrine/dbal": "^3.9.4",
         "doctrine/doctrine-bundle": "^2.14",
         "doctrine/doctrine-migrations-bundle": "^3.4.1",
-        "doctrine/orm": "^3.3.2",
-        "nelmio/api-doc-bundle": "^5.0",
+        "doctrine/orm": "^3.3",
+        "nelmio/api-doc-bundle": "^5.0.1",
         "nelmio/cors-bundle": "^2.5",
         "runtime/frankenphp-symfony": "^0.2.0",
         "symfony/asset": "7.2.*",
@@ -75,6 +75,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.1",
         "symfony/maker-bundle": "^1.62.1"
     }
 }

@@ -5,12 +5,12 @@ namespace App\Entity;
 use App\Repository\PedidoRepository;
 use App\Enum\StatusPedido;
 use DateTimeInterface;
-use Doctrine\DBAL\Types\Types;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: PedidoRepository::class)]
-#[ORM\Table(name: 'PEDIDO')]
+#[ORM\Table(name: 'pedido')]
 #[OA\Schema(
     schema: "Pedido",
     description: "Modelo de Pedido no Cardápio",
@@ -20,35 +20,39 @@ class Pedido
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     #[OA\Property(description: "ID do pedido", example: 1)]
     private ?int $idPedido = null;
 
-    #[ORM\Column]
-    #[OA\Property(description: "Número da comanda associada ao pedido", example: 1)]
-    private ?int $comanda = null;
+    #[ORM\ManyToOne(targetEntity: Mesa::class)]
+    #[ORM\JoinColumn(name: "comanda", referencedColumnName: "comanda", nullable: false, onDelete: "CASCADE")]
+    #[OA\Property(description: "Mesa associada ao pedido", example: 1)]
+    private Mesa $mesa;
 
-    #[ORM\Column]
-    #[OA\Property(description: "ID do produto solicitado", example: 1)]
-    private ?int $idProduto = null;
+    #[ORM\ManyToOne(targetEntity: Produto::class)]
+    #[ORM\JoinColumn(name: "id_produto", referencedColumnName: "id_produto", nullable: false, onDelete: "CASCADE")]
+    #[OA\Property(description: "Produto solicitado", example: 1)]
+    private Produto $produto;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[OA\Property(description: "Observação opcional sobre o pedido", example: "Sem gelo")]
     private ?string $observacao = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: "datetime")]
     #[OA\Property(description: "Data e hora do pedido", example: "2024-03-30T14:00:00Z")]
     private ?DateTimeInterface $dataPedido = null;
 
     #[ORM\Column(type: "string", length: 10, enumType: StatusPedido::class)]
     #[OA\Property(description: "Status do pedido", example: "PREPARANDO", enum: ["PREPARANDO", "PRONTO", "ENTREGUE"])]
-    private ?StatusPedido $statusPedido = null;
+    private StatusPedido $statusPedido;
 
-    public function __construct(int $comanda, int $idProduto, ?string $observacao = null)
+    public function __construct(Mesa $mesa, Produto $produto, ?string $observacao = null)
     {
-        $this->comanda = $comanda;
-        $this->idProduto = $idProduto;
+        $this->mesa = $mesa;
+        $this->produto = $produto;
         $this->observacao = $observacao;
+        $this->dataPedido = new DateTime();
+        $this->statusPedido = StatusPedido::PREPARANDO;
     }
 
     public function getIdPedido(): ?int
@@ -63,26 +67,26 @@ class Pedido
         return $this;
     }
 
-    public function getComanda(): ?int
+    public function getMesa(): ?Mesa
     {
-        return $this->comanda;
+        return $this->mesa;
     }
 
-    public function setComanda(int $comanda): static
+    public function setMesa(Mesa $mesa): static
     {
-        $this->comanda = $comanda;
+        $this->comanda = $mesa;
 
         return $this;
     }
 
-    public function getIdProduto(): ?int
+    public function getProduto(): ?Produto
     {
-        return $this->idProduto;
+        return $this->produto;
     }
 
-    public function setIdProduto(int $idProduto): static
+    public function setProduto(Produto $produto): static
     {
-        $this->idProduto = $idProduto;
+        $this->produto = $produto;
 
         return $this;
     }
@@ -104,10 +108,12 @@ class Pedido
         return $this->dataPedido;
     }
 
-    public function setDataPedido(string $dataPedido): static
+    public function setDataPedido(DateTimeInterface|string $dataPedido): static
     {
-        $this->dataPedido = new \DateTime($dataPedido);
-
+        if (is_string($dataPedido)) {
+            $dataPedido = new DateTime($dataPedido);
+        }
+        $this->dataPedido = $dataPedido;
         return $this;
     }
 
@@ -119,10 +125,11 @@ class Pedido
     public function setStatusPedido(StatusPedido|string $statusPedido): static
     {
         if (is_string($statusPedido)) {
-            if (!StatusPedido::tryFrom($statusPedido)) {
-                throw new \InvalidArgumentException("Status inválido: $statusPedido. Valores permitidos: PREPARANDO, PRONTO, ENTREGUE.");
+            $statusPedido = StatusPedido::tryFrom($statusPedido);
+            
+            if (!$statusPedido) {
+                throw new \InvalidArgumentException("Status inválido: $statusPedido. Valores permitidos: " . implode(', ', StatusPedido::values()));
             }
-            $statusPedido = StatusPedido::from($statusPedido);
         }
     
         $this->statusPedido = $statusPedido;

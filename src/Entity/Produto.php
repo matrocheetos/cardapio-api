@@ -7,53 +7,54 @@ use Doctrine\ORM\Mapping as ORM;
 use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
-#[ORM\Table(name: 'PRODUTO')]
+#[ORM\Table(name: 'produto')]
 class Produto
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     #[OA\Property(type: "integer", description: "ID do produto", example: 1)]
     private ?int $idProduto = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     #[OA\Property(description: "Nome do produto", example: "Salada Ceasar")]
-    private ?string $nome = null;
+    private string $nome;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     #[OA\Property(description: "Descrição do produto", example: "Salada com molho especial e croutons")]
-    private ?string $descricao = null;
+    private string $descricao;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[OA\Property(description: "Caminho para uma imagem", example: "https://cardapio.com/imagem.jpg")]
     private ?string $imagem = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "float")]
     #[OA\Property(description: "Preço do produto", example: 25.90)]
-    private ?float $preco = null;
+    private float $preco;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
     #[OA\Property(description: "Se o produto não possui ingredientes de origem animal", example: 0)]
-    private ?bool $ehVegano = null;
+    private bool $ehVegano = false;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
     #[OA\Property(description: "Se o produto não contém glúten", example: 0)]
-    private ?bool $ehSemGluten = null;
+    private bool $ehSemGluten = false;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     #[OA\Property(description: "Recomendação de número de porções por produto", example: 1)]
-    private ?int $porcoes = null;
+    private int $porcoes;
 
-    #[ORM\Column]
-    #[OA\Property(description: "Categoria do produto (ID_CATEGORIA)", example: 1)]
-    private ?int $categoria = null;
+    #[ORM\ManyToOne(targetEntity: Categoria::class, inversedBy: "produtos")]
+    #[ORM\JoinColumn(name: "id_categoria", referencedColumnName: "id_categoria", nullable: false, onDelete: "CASCADE")]
+    #[OA\Property(description: "Categoria do produto", example: 1)]
+    private Categoria $categoria;
 
     public function getIdProduto(): ?int
     {
         return $this->idProduto;
     }
 
-    public function getNome(): ?string
+    public function getNome(): string
     {
         return $this->nome;
     }
@@ -65,7 +66,7 @@ class Produto
         return $this;
     }
 
-    public function getDescricao(): ?string
+    public function getDescricao(): string
     {
         return $this->descricao;
     }
@@ -89,7 +90,7 @@ class Produto
         return $this;
     }
 
-    public function getPreco(): ?float
+    public function getPreco(): float
     {
         return $this->preco;
     }
@@ -101,7 +102,7 @@ class Produto
         return $this;
     }
 
-    public function isEhVegano(): ?bool
+    public function isEhVegano(): bool
     {
         return $this->ehVegano;
     }
@@ -113,7 +114,7 @@ class Produto
         return $this;
     }
 
-    public function isEhSemGluten(): ?bool
+    public function isEhSemGluten(): bool
     {
         return $this->ehSemGluten;
     }
@@ -125,7 +126,7 @@ class Produto
         return $this;
     }
 
-    public function getPorcoes(): ?int
+    public function getPorcoes(): int
     {
         return $this->porcoes;
     }
@@ -137,12 +138,12 @@ class Produto
         return $this;
     }
 
-    public function getCategoria(): ?int
+    public function getCategoria(): Categoria
     {
         return $this->categoria;
     }
 
-    public function setCategoria(int $categoria): static
+    public function setCategoria(Categoria $categoria): static
     {
         $this->categoria = $categoria;
 
