@@ -22,13 +22,13 @@ class PedidoRepository extends BaseRepository
 
         $sql = "
             SELECT
-                ID_PEDIDO,
-                COMANDA,
-                ID_PRODUTO,
-                OBSERVACAO,
-                DATA_PEDIDO,
-                STATUS_PEDIDO
-            FROM PEDIDO
+                id_pedido,
+                comanda,
+                id_produto,
+                observacao,
+                data_pedido,
+                status_pedido
+            FROM pedido;
         ";
 
         try {
@@ -69,8 +69,8 @@ class PedidoRepository extends BaseRepository
         ";
 
         $params = [
-            ':comanda'       => $pedido->getComanda(),
-            ':id_produto'    => $pedido->getIdProduto(),
+            ':comanda'       => $pedido->getMesa(),
+            ':id_produto'    => $pedido->getProduto(),
             ':observacao'    => $pedido->getObservacao()
         ];
 

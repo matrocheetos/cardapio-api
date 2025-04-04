@@ -23,9 +23,10 @@ class CategoriaRepository extends BaseRepository
 
         $sql = "
             SELECT
-                ID_CATEGORIA,
-                DESCRICAO
-            FROM CATEGORIA;
+                id_categoria,
+                descricao
+            FROM categoria
+            ORDER BY descricao ASC;
         ";
 
         try {
@@ -51,14 +52,14 @@ class CategoriaRepository extends BaseRepository
 
         $sql = "
             SELECT
-                ID_CATEGORIA,
-                DESCRICAO
-            FROM CATEGORIA
-            WHERE ID_CATEGORIA = :id
+                id_categoria,
+                descricao
+            FROM categoria
+            WHERE id_categoria = ?
         ";
-
+        
         $params = [
-            ':id' => $id
+            1 => $id
         ];
 
         try {

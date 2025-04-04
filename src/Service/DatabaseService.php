@@ -2,47 +2,51 @@
 
 namespace App\Service;
 
-use SQLite3;
-use SQLite3Result;
-use SQLite3Stmt;
+use PDO;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class DatabaseService
 {
-    private static ?SQLite3 $instance = null;
+    private static ?PDO $instance = null;
 
-    public function __construct()
-    { 
+    public function __construct(ParameterBagInterface $params)
+    {
         if (is_null(self::$instance)) {
-            self::$instance = new SQLite3(__DIR__ . '/../../var/database.db');
-            self::$instance->exec('PRAGMA foreign_keys = ON;');
+            $databaseUrl = $_ENV['DATABASE_URL'] ?? getenv('DATABASE_URL');
+            $dsn = $this->parseDatabaseUrl($databaseUrl);
+
+            $options = [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+            ];
+
+            self::$instance = new PDO($dsn['dsn'], $dsn['user'], $dsn['pass'], $options);
         }
     }
 
-    public function getInstance(): SQLite3
+    public function getInstance(): PDO
     {
         return self::$instance;
     }
 
-    private function fetch(SQLite3Result $results, $mode = SQLITE3_ASSOC): array
+    private function fetch(\PDOStatement $stmt): array
     {
-        $arr = [];
-        while($result = $results->fetchArray($mode)) {
-            $arr[] = $result;
-        }
-        return $arr;
+        return $stmt->fetchAll();
     }
 
-    private function bind(SQLite3Stmt $stmt, array $params): SQLite3Stmt
+    private function bind(\PDOStatement $stmt, array $params): \PDOStatement
     {
         foreach ($params as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue($key, $value, SQLITE3_INTEGER);
-            } elseif (is_float($value)) {
-                $stmt->bindValue($key, $value, SQLITE3_FLOAT);
-            } else {
-                $stmt->bindValue($key, $value, SQLITE3_TEXT);
-            }
+            $type = match (true) {
+                is_int($value)   => PDO::PARAM_INT,
+                is_bool($value)  => PDO::PARAM_BOOL,
+                is_null($value)  => PDO::PARAM_NULL,
+                default          => PDO::PARAM_STR,
+            };
+            $stmt->bindValue(is_string($key) ? $key : $key + 1, $value, $type);
         }
+
         return $stmt;
     }
 
@@ -50,18 +54,46 @@ class DatabaseService
     {
         $stmt = self::$instance->prepare($sql);
 
-        if(isset($params)) {
-            $stmt = self::bind($stmt, $params);
+        if ($params) {
+            $stmt = $this->bind($stmt, $params);
         }
 
-        return self::fetch($stmt->execute());
+        $stmt->execute();
+        return $this->fetch($stmt);
     }
 
-    public function insere(string $sql, array $params): array|bool
+    public function insere(string $sql, array $params): array
     {
         $stmt = self::$instance->prepare($sql);
-        $stmt = self::bind($stmt, $params);
+        $stmt = $this->bind($stmt, $params);
+        $stmt->execute();
 
-        return $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+        return ['lastInsertId' => self::$instance->lastInsertId()];
+    }
+
+    private function parseDatabaseUrl(string $url): array
+    {
+        $components = parse_url($url);
+
+        if (!$components) {
+            throw new \InvalidArgumentException('DATABASE_URL inválida');
+        }
+
+        $scheme = $components['scheme'];
+        $host = $components['host'] ?? '127.0.0.1';
+        $port = $components['port'] ?? 3306;
+        $user = $components['user'] ?? 'root';
+        $pass = $components['pass'] ?? '';
+        $dbname = ltrim($components['path'], '/');
+        $query = isset($components['query']) ? '?' . $components['query'] : '';
+        $charset = 'utf8mb4';
+
+        $dsn = "$scheme:host=$host;port=$port;dbname=$dbname;charset=$charset";
+
+        return [
+            'dsn'  => $dsn,
+            'user' => $user,
+            'pass' => $pass,
+        ];
     }
 }
