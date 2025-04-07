@@ -19,8 +19,6 @@ class ProdutoRepository extends BaseRepository
 
     public function lista(): array
     {
-        $produto = new Produto();
-
         $sql = "
             SELECT
                 id_produto,
@@ -52,10 +50,8 @@ class ProdutoRepository extends BaseRepository
         ];
     }
 
-    public function listaId($id): array
+    public function listaId(int $id): array
     {
-        $produto = new Produto();
-
         $sql = "
             SELECT
                 id_produto,
@@ -92,35 +88,22 @@ class ProdutoRepository extends BaseRepository
         ];
     }
 
-    public function cria($request): array
+    public function cria(Produto $produto): array
     {
-        $data = json_decode($request->getContent(), true);
-
-        $nome        = $data['nome'];
-        $descricao   = $data['descricao'];
-        $imagem      = $data['imagem'] ?? null; 
-        $preco       = $data['preco'];
-        $ehVegano    = $data['ehVegano'];
-        $ehSemGluten = $data['ehSemGluten'];
-        $porcoes     = $data['porcoes'];
-        $categoria   = $data['categoria'];
-        
-        $produto = new Produto();
-
         $sql = "
-            INSERT INTO PRODUTO (NOME, DESCRICAO, IMAGEM, PRECO, EH_VEGANO, EH_SEM_GLUTEN, PORCOES, CATEGORIA)
+            INSERT INTO produto (nome, descricao, imagem, preco, eh_vegano, eh_sem_gluten, porcoes, categoria)
             VALUES (:nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes, :categoria);
         ";
 
         $params = [
-            ':nome'          => $nome,
-            ':descricao'     => $descricao,
-            ':imagem'        => $imagem,
-            ':preco'         => $preco,
-            ':eh_vegano'     => $ehVegano,
-            ':eh_sem_gluten' => $ehSemGluten,
-            ':porcoes'       => $porcoes,
-            ':categoria'     => $categoria
+            ':nome'          => $produto->getNome(),
+            ':descricao'     => $produto->getDescricao(),
+            ':imagem'        => $produto->getImagem(),
+            ':preco'         => $produto->getPreco(),
+            ':eh_vegano'     => $produto->isEhVegano(),
+            ':eh_sem_gluten' => $produto->isEhSemGluten(),
+            ':porcoes'       => $produto->getPorcoes(),
+            ':categoria'     => $produto->getCategoria()->getIdCategoria()
         ];
 
         try {
@@ -137,6 +120,94 @@ class ProdutoRepository extends BaseRepository
             'status' => 200,
             'msg'    => 'Produto cadastrado com sucesso.',
             'result' => $result
+        ];
+    }
+
+    public function edita(Produto $produto): array
+    {
+        $sql = "
+            UPDATE produto SET
+                nome = :nome,
+                descricao = :descricao,
+                imagem = :imagem,
+                preco = :preco,
+                eh_vegano = :eh_vegano,
+                eh_sem_gluten = :eh_sem_gluten,
+                porcoes = :porcoes,
+                categoria = :categoria
+            WHERE id_produto = :id_produto
+        ";
+
+        $params = [
+            ':nome'          => $produto->getNome(),
+            ':descricao'     => $produto->getDescricao(),
+            ':imagem'        => $produto->getImagem(),
+            ':preco'         => $produto->getPreco(),
+            ':eh_vegano'     => $produto->isEhVegano(),
+            ':eh_sem_gluten' => $produto->isEhSemGluten(),
+            ':porcoes'       => $produto->getPreco(),
+            ':categoria'     => $produto->getCategoria()->getIdCategoria(),
+            ':id_produto'    => $produto->getIdProduto()
+        ];
+
+        try {
+            $result = $this->db->atualiza($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao editar produto: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        if(!$result) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao editar produto',
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => 'Produto editado com sucesso',
+            'result' => $produto->toArray()
+        ];
+    }
+
+    public function deleta(Produto $produto): array
+    {
+        $sql = "
+            DELETE FROM produto
+            WHERE id_produto = :id_produto
+        ";
+
+        $params = [
+            ':id_produto' => $produto->getIdProduto()
+        ];
+
+        try {
+            $result = $this->db->deleta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao deletar produto: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        if(!$result) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao deletar produto',
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => 'Produto deletado com sucesso',
+            'result' => null
         ];
     }
 }

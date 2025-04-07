@@ -54,6 +54,13 @@ class Produto
         return $this->idProduto;
     }
 
+    public function setIdProduto(int $idProduto): static
+    {
+        $this->idProduto = $idProduto;
+
+        return $this;
+    }
+
     public function getNome(): string
     {
         return $this->nome;
@@ -150,5 +157,36 @@ class Produto
         return $this;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id_produto'    => $this->getIdProduto(),
+            'nome'          => $this->getNome(),
+            'descricao'     => $this->getDescricao(),
+            'imagem'        => $this->getImagem(),
+            'preco'         => $this->getPreco(),
+            'eh_vegano'     => $this->isEhVegano(),
+            'eh_sem_gluten' => $this->isEhSemGluten(),
+            'porcoes'       => $this->getPorcoes(),
+            'categoria'     => $this->getCategoria()?->getIdCategoria()
+        ];
+    }
 
+    public static function fromArray(array $data): self
+    {
+        $produto = new self();
+
+        $produto
+            ->setNome($data['nome'])
+            ->setDescricao($data['descricao'])
+            ->setPreco($data['preco'])
+            ->setImagem($data['imagem'] ?? null)
+            ->setEhVegano($data['eh_vegano'])
+            ->setEhSemGluten($data['eh_sem_gluten'])
+            ->setPorcoes($data['porcoes'])
+            ->setCategoria((new Categoria())->setIdCategoria($data['categoria']))
+        ;
+
+        return $produto;
+    }
 }

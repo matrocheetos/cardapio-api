@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use PDO;
+use PDOStatement;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class DatabaseService
@@ -30,19 +31,19 @@ class DatabaseService
         return self::$instance;
     }
 
-    private function fetch(\PDOStatement $stmt): array
+    private function fetch(PDOStatement $stmt): array
     {
         return $stmt->fetchAll();
     }
 
-    private function bind(\PDOStatement $stmt, array $params): \PDOStatement
+    private function bind(PDOStatement $stmt, array $params): PDOStatement
     {
         foreach ($params as $key => $value) {
             $type = match (true) {
                 is_int($value)   => PDO::PARAM_INT,
                 is_bool($value)  => PDO::PARAM_BOOL,
                 is_null($value)  => PDO::PARAM_NULL,
-                default          => PDO::PARAM_STR,
+                default                 => PDO::PARAM_STR
             };
             $stmt->bindValue(is_string($key) ? $key : $key + 1, $value, $type);
         }
@@ -68,7 +69,21 @@ class DatabaseService
         $stmt = $this->bind($stmt, $params);
         $stmt->execute();
 
-        return ['lastInsertId' => self::$instance->lastInsertId()];
+        return ['id' => self::$instance->lastInsertId()];
+    }
+
+    public function atualiza(string $sql, array $params): bool
+    {
+        $stmt = self::$instance->prepare($sql);
+        $stmt = $this->bind($stmt, $params);
+        return $stmt->execute();
+    }
+
+    public function deleta(string $sql, array $params): bool
+    {
+        $stmt = self::$instance->prepare($sql);
+        $stmt = $this->bind($stmt, $params);
+        return $stmt->execute();
     }
 
     private function parseDatabaseUrl(string $url): array
@@ -79,13 +94,12 @@ class DatabaseService
             throw new \InvalidArgumentException('DATABASE_URL inválida');
         }
 
-        $scheme = $components['scheme'];
-        $host = $components['host'] ?? '127.0.0.1';
-        $port = $components['port'] ?? 3306;
-        $user = $components['user'] ?? 'root';
-        $pass = $components['pass'] ?? '';
-        $dbname = ltrim($components['path'], '/');
-        $query = isset($components['query']) ? '?' . $components['query'] : '';
+        $scheme  = $components['scheme'];
+        $host    = $components['host'] ?? '127.0.0.1';
+        $port    = $components['port'] ?? 3306;
+        $user    = $components['user'] ?? 'root';
+        $pass    = $components['pass'] ?? '';
+        $dbname  = ltrim($components['path'], '/');
         $charset = 'utf8mb4';
 
         $dsn = "$scheme:host=$host;port=$port;dbname=$dbname;charset=$charset";

@@ -136,4 +136,17 @@ class Pedido
     
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id_pedido'     => $this->getIdPedido(),
+            'comanda'       => $this->getMesa()?->getComanda(),
+            'nro_mesa'      => $this->getMesa()?->getNroMesa(),
+            'produto'       => $this->getProduto()?->toArray(),
+            'observacao'    => $this->getObservacao(),
+            'data_pedido'   => $this->getDataPedido()?->format('Y-m-d H:i:s'),
+            'status_pedido' => $this->getStatusPedido()?->value
+        ];
+    }
 }

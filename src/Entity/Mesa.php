@@ -63,4 +63,13 @@ class Mesa
         $this->statusPagamento = (bool) $statusPagamento;
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'comanda'          => $this->getComanda(),
+            'nro_mesa'         => $this->getNroMesa(),
+            'status_pagamento' => $this->getStatusPagamento(),
+        ];
+    }
 }

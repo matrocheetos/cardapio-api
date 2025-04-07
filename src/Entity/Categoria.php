@@ -81,4 +81,21 @@ class Categoria
         }
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id_categoria' => $this->getIdCategoria(),
+            'descricao'    => $this->getDescricao()
+        ];
+    }
+
+    public static function fromArray(array $data): self
+    {
+        $categoria = new self();
+
+        $categoria->setDescricao($data['descricao']);
+
+        return $categoria;
+    }
 }

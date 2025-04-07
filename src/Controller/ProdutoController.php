@@ -81,7 +81,7 @@ class ProdutoController extends AbstractController
         ], $result['status']);
     }
 
-    #[Route('/produtos', name: 'produto_cria', methods: ['POST'])]
+    #[Route('/produtos/cria', name: 'produto_cria', methods: ['POST'])]
     #[OA\Post(
         summary: "Cria um novo produto",
         tags: ["Produtos"],
@@ -111,7 +111,37 @@ class ProdutoController extends AbstractController
     )]
     public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse
     {
-        $result = $produtoRepository->cria($request);
+        $data = json_decode($request->getContent(), true);
+        $produto = Produto::fromArray($data);
+
+        $result = $produtoRepository->cria($produto);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/produtos/edita/{id}', name: 'produto_edita', methods: ['PUT'])]
+    public function edita(Request $request, ProdutoRepository $produtoRepository, int $id): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $produto = Produto::fromArray($data)->setIdProduto($id);
+
+        $result = $produtoRepository->edita($produto);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/produtos/deleta/{id}', name: 'produto_deleta', methods: ['DELETE'])]
+    public function deleta(ProdutoRepository $produtoRepository, int $id): JsonResponse
+    {
+        $produto = new Produto()->setIdProduto($id);
+
+        $result = $produtoRepository->deleta($produto);
 
         return $this->json([
             'msg'    => $result['msg'],

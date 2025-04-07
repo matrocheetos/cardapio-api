@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\CategoriaRepository;
+use App\Entity\Categoria;
 use OpenApi\Attributes as OA;
 
 final class CategoriaController extends AbstractController
@@ -26,6 +28,47 @@ final class CategoriaController extends AbstractController
     public function listaId(CategoriaRepository $categoriaRepository, int $id): JsonResponse
     {
         $result = $categoriaRepository->listaId($id);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/categorias/cria', name: 'categoria_cria', methods: ['POST'])]
+    public function cria(Request $request, CategoriaRepository $categoriaRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $categoria = Categoria::fromArray($data);
+
+        $result = $categoriaRepository->cria($categoria);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/categorias/edita/{id}', name: 'categoria_edita', methods: ['PUT'])]
+    public function edita(Request $request, CategoriaRepository $categoriaRepository, int $id): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $categoria = Categoria::fromArray($data)->setIdCategoria($id);
+
+        $result = $categoriaRepository->edita($categoria);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+    #[Route('/categorias/deleta/{id}', name: 'categoria_deleta', methods: ['DELETE'])]
+    public function deleta(CategoriaRepository $categoriaRepository, int $id): JsonResponse
+    {
+        $categoria = new Categoria()->setIdCategoria($id);
+        
+        $result = $categoriaRepository->deleta($categoria);
 
         return $this->json([
             'msg'    => $result['msg'],
