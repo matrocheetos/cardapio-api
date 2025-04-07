@@ -66,8 +66,9 @@ final class CategoriaController extends AbstractController
     #[Route('/categorias/deleta/{id}', name: 'categoria_deleta', methods: ['DELETE'])]
     public function deleta(CategoriaRepository $categoriaRepository, int $id): JsonResponse
     {
-        $categoria = new Categoria()->setIdCategoria($id);
-        
+        $categoria = new Categoria();
+        $categoria->setIdCategoria($id);
+
         $result = $categoriaRepository->deleta($categoria);
 
         return $this->json([

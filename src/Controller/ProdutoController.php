@@ -139,7 +139,8 @@ class ProdutoController extends AbstractController
     #[Route('/produtos/deleta/{id}', name: 'produto_deleta', methods: ['DELETE'])]
     public function deleta(ProdutoRepository $produtoRepository, int $id): JsonResponse
     {
-        $produto = new Produto()->setIdProduto($id);
+        $produto = new Produto();
+        $produto->setIdProduto($id);
 
         $result = $produtoRepository->deleta($produto);
 
