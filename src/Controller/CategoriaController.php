@@ -53,7 +53,7 @@ final class CategoriaController extends AbstractController
     public function edita(Request $request, CategoriaRepository $categoriaRepository, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $categoria = Categoria::fromArray($data)->setIdCategoria($id);
+        $categoria = Categoria::fromArray($data, $id);
 
         $result = $categoriaRepository->edita($categoria);
 

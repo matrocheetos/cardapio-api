@@ -126,7 +126,7 @@ class ProdutoController extends AbstractController
     public function edita(Request $request, ProdutoRepository $produtoRepository, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $produto = Produto::fromArray($data)->setIdProduto($id);
+        $produto = Produto::fromArray($data, $id);
 
         $result = $produtoRepository->edita($produto);
 

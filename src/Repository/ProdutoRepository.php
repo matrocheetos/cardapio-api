@@ -91,8 +91,8 @@ class ProdutoRepository extends BaseRepository
     public function cria(Produto $produto): array
     {
         $sql = "
-            INSERT INTO produto (nome, descricao, imagem, preco, eh_vegano, eh_sem_gluten, porcoes, categoria)
-            VALUES (:nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes, :categoria);
+            INSERT INTO produto (id_categoria, nome, descricao, imagem, preco, eh_vegano, eh_sem_gluten, porcoes, )
+            VALUES (:id_categoria, :nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes);
         ";
 
         $params = [
@@ -103,7 +103,7 @@ class ProdutoRepository extends BaseRepository
             ':eh_vegano'     => $produto->isEhVegano(),
             ':eh_sem_gluten' => $produto->isEhSemGluten(),
             ':porcoes'       => $produto->getPorcoes(),
-            ':categoria'     => $produto->getCategoria()->getIdCategoria()
+            ':id_categoria'     => $produto->getCategoria()->getIdCategoria()
         ];
 
         try {
@@ -116,29 +116,33 @@ class ProdutoRepository extends BaseRepository
             ];
         }
 
+        $produto->setIdProduto($result['id']);
+
         return [
             'status' => 200,
-            'msg'    => 'Produto cadastrado com sucesso.',
-            'result' => $result
+            'msg'    => 'Produto cadastrado com sucesso!',
+            'result' => $produto->toArray()
         ];
     }
 
     public function edita(Produto $produto): array
     {
         $sql = "
-            UPDATE produto SET
+            UPDATE produto
+            SET 
+                id_categoria = :id_categoria,
                 nome = :nome,
                 descricao = :descricao,
                 imagem = :imagem,
                 preco = :preco,
                 eh_vegano = :eh_vegano,
                 eh_sem_gluten = :eh_sem_gluten,
-                porcoes = :porcoes,
-                categoria = :categoria
+                porcoes = :porcoes
             WHERE id_produto = :id_produto
         ";
 
         $params = [
+            ':id_categoria'  => $produto->getCategoria()->getIdCategoria(),
             ':nome'          => $produto->getNome(),
             ':descricao'     => $produto->getDescricao(),
             ':imagem'        => $produto->getImagem(),
@@ -146,7 +150,6 @@ class ProdutoRepository extends BaseRepository
             ':eh_vegano'     => $produto->isEhVegano(),
             ':eh_sem_gluten' => $produto->isEhSemGluten(),
             ':porcoes'       => $produto->getPreco(),
-            ':categoria'     => $produto->getCategoria()->getIdCategoria(),
             ':id_produto'    => $produto->getIdProduto()
         ];
 
@@ -163,14 +166,14 @@ class ProdutoRepository extends BaseRepository
         if(!$result) {
             return [
                 'status' => 400,
-                'msg'    => 'Erro ao editar produto',
+                'msg'    => 'Erro ao editar produto.',
                 'result' => null
             ];
         }
 
         return [
             'status' => 200,
-            'msg'    => 'Produto editado com sucesso',
+            'msg'    => 'Produto editado com sucesso!',
             'result' => $produto->toArray()
         ];
     }
@@ -199,14 +202,14 @@ class ProdutoRepository extends BaseRepository
         if(!$result) {
             return [
                 'status' => 400,
-                'msg'    => 'Erro ao deletar produto',
+                'msg'    => 'Erro ao deletar produto.',
                 'result' => null
             ];
         }
 
         return [
             'status' => 200,
-            'msg'    => 'Produto deletado com sucesso',
+            'msg'    => 'Produto deletado com sucesso!',
             'result' => null
         ];
     }

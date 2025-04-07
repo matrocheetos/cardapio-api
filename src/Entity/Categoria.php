@@ -90,11 +90,18 @@ class Categoria
         ];
     }
 
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data, int $id = null): self
     {
-        $categoria = new self();
+        if (!isset($data['descricao'])) {
+            throw new \InvalidArgumentException('Dados incompletos ou inválidos para a categoria.');
+        }
 
+        $categoria = new self();
         $categoria->setDescricao($data['descricao']);
+
+        if (isset($id)) {
+            $categoria->setIdCategoria($id);
+        }
 
         return $categoria;
     }
