@@ -109,9 +109,9 @@ class Produto
         return $this;
     }
 
-    public function isEhVegano(): bool
+    public function isEhVegano(): int
     {
-        return $this->ehVegano;
+        return $this->ehVegano ? 1 : 0;
     }
 
     public function setEhVegano(bool $ehVegano): static
@@ -121,9 +121,9 @@ class Produto
         return $this;
     }
 
-    public function isEhSemGluten(): bool
+    public function isEhSemGluten(): int
     {
-        return $this->ehSemGluten;
+        return $this->ehSemGluten ? 1 : 0;
     }
 
     public function setEhSemGluten(bool $ehSemGluten): static
@@ -161,14 +161,14 @@ class Produto
     {
         return [
             'id_produto'    => $this->getIdProduto(),
+            'id_categoria'  => $this->getCategoria()?->getIdCategoria(),
             'nome'          => $this->getNome(),
             'descricao'     => $this->getDescricao(),
             'imagem'        => $this->getImagem(),
             'preco'         => $this->getPreco(),
             'eh_vegano'     => $this->isEhVegano(),
             'eh_sem_gluten' => $this->isEhSemGluten(),
-            'porcoes'       => $this->getPorcoes(),
-            'categoria'     => $this->getCategoria()?->getIdCategoria()
+            'porcoes'       => $this->getPorcoes()
         ];
     }
 
