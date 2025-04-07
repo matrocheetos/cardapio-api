@@ -174,7 +174,7 @@ class Produto
 
     public static function fromArray(array $data, int $id = null): self
     {
-        if (!isset($data['nome'], $data['descricao'], $data['preco'], $data['eh_vegano'], $data['eh_sem_gluten'], $data['porcoes'], $data['categoria'])) {
+        if (!isset($data['nome'], $data['descricao'], $data['preco'], $data['eh_vegano'], $data['eh_sem_gluten'], $data['porcoes'], $data['id_categoria'])) {
             throw new \InvalidArgumentException('Dados incompletos ou inválidos para o produto.');
         }
         
@@ -187,7 +187,7 @@ class Produto
             ->setEhVegano($data['eh_vegano'])
             ->setEhSemGluten($data['eh_sem_gluten'])
             ->setPorcoes($data['porcoes'])
-            ->setCategoria((new Categoria())->setIdCategoria($data['categoria']))
+            ->setCategoria((new Categoria())->setIdCategoria($data['id_categoria']))
         ;
 
         if (isset($id)) {

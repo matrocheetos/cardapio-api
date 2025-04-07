@@ -136,8 +136,8 @@ class Pedido
             'nro_mesa'      => $this->getMesa()?->getNroMesa(),
             'produto'       => $this->getProduto()?->toArray(),
             'observacao'    => $this->getObservacao(),
-            'data_pedido'   => $this->getDataPedido()?->format('Y-m-d H:i:s'),
-            'status_pedido' => $this->getStatusPedido()?->value
+            'data_pedido'   => $this->getDataPedido(),
+            'status_pedido' => $this->getStatusPedido()
         ];
     }
 

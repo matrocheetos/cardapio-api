@@ -22,14 +22,14 @@ class ProdutoRepository extends BaseRepository
         $sql = "
             SELECT
                 id_produto,
+                id_categoria,
                 nome,
                 descricao,
                 imagem,
                 preco,
                 eh_vegano,
                 eh_sem_gluten,
-                porcoes,
-                id_categoria
+                porcoes
             FROM produto;
         ";
 
@@ -55,14 +55,14 @@ class ProdutoRepository extends BaseRepository
         $sql = "
             SELECT
                 id_produto,
+                id_categoria,
                 nome,
                 descricao,
                 imagem,
                 preco,
                 eh_vegano,
                 eh_sem_gluten,
-                porcoes,
-                id_categoria
+                porcoes
             FROM produto
             WHERE id_produto = :id_produto;
         ";
