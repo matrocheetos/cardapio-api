@@ -1,12 +1,14 @@
 nelmio_api_doc:
     documentation:
+        servers:
+            - url: https://pratofacil.dynv6.net/api/cardapio
+              description: API de Cardápio Digital
+            - url: http://localhost:8001/api/cardapio
+              description: API de Cardápio Digital (local)
         info:
             title: Cardápio API
             description: API para cardápio digital.
             version: 1.0.0
-        components:
-            schemas: { }
-        paths: { }
-    areas: # to filter documented areas
+    areas:
         path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            - ^/api(?!/doc$)

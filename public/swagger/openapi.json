@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cardápio API",
+    "description": "API para Cardápio Digital",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://pratofacil.dynv6.net/api/cardapio",
+      "description": "API de Cardápio Digital"
+    },
+    {
+      "url": "http://localhost:8001/api/cardapio",
+      "description": "API de Cardápio Digital (local)"
+    }
+  ],
+  "paths": {
+    "/api/cardapio/categorias": {
+      "$ref": "./openapi/categoria.yaml#/paths/~1api~1cardapio~1categorias"
+    },
+    "/api/cardapio/categorias/{id_categoria}": {
+      "$ref": "./openapi/categoria.yaml#/paths/~1api~1cardapio~1categorias~1{id_categoria}"
+    },
+    "/api/cardapio/categorias/cria": {
+      "$ref": "./openapi/categoria.yaml#/paths/~1api~1cardapio~1categorias~1cria"
+    },
+    "/api/cardapio/categorias/edita/{id_categoria}": {
+      "$ref": "./openapi/categoria.yaml#/paths/~1api~1cardapio~1categorias~1edita~1{id_categoria}"
+    },
+    "/api/cardapio/categorias/deleta/{id_categoria}": {
+      "$ref": "./openapi/categoria.yaml#/paths/~1api~1cardapio~1categorias~1deleta~1{id_categoria}"
+    },
+    "/api/cardapio/mesa": {
+      "$ref": "./openapi/mesa.yaml#/paths/~1api~1cardapio~1mesa"
+    },
+    "/api/cardapio/mesa/{id_mesa}": {
+      "$ref": "./openapi/mesa.yaml#/paths/~1api~1cardapio~1mesa~1{id_mesa}"
+    },
+    "/api/cardapio/mesa/cria": {
+      "$ref": "./openapi/mesa.yaml#/paths/~1api~1cardapio~1mesa~1cria"
+    },
+    "/api/cardapio/mesa/edita/{id_mesa}": {
+      "$ref": "./openapi/mesa.yaml#/paths/~1api~1cardapio~1mesa~1edita~1{id_mesa}"
+    },
+    "/api/cardapio/mesa/deleta/{id_mesa}": {
+      "$ref": "./openapi/mesa.yaml#/paths/~1api~1cardapio~1mesa~1deleta~1{id_mesa}"
+    },
+    "/api/cardapio/pedido": {
+      "$ref": "./openapi/pedido.yaml#/paths/~1api~1cardapio~1pedido"
+    },
+    "/api/cardapio/pedido/{id_pedido}": {
+      "$ref": "./openapi/pedido.yaml#/paths/~1api~1cardapio~1pedido~1{id_pedido}"
+    },
+    "/api/cardapio/pedido/cria": {
+      "$ref": "./openapi/pedido.yaml#/paths/~1api~1cardapio~1pedido~1cria"
+    },
+    "/api/cardapio/pedido/edita/{id_pedido}": {
+      "$ref": "./openapi/pedido.yaml#/paths/~1api~1cardapio~1pedido~1edita~1{id_pedido}"
+    },
+    "/api/cardapio/pedido/deleta/{id_pedido}": {
+      "$ref": "./openapi/pedido.yaml#/paths/~1api~1cardapio~1pedido~1deleta~1{id_pedido}"
+    },
+    "/api/cardapio/produtos": {
+      "$ref": "./openapi/produto.yaml#/paths/~1api~1cardapio~1produtos"
+    },
+    "/api/cardapio/produtos/{id_produto}": {
+      "$ref": "./openapi/produto.yaml#/paths/~1api~1cardapio~1produtos~1{id_produto}"
+    },
+    "/api/cardapio/produtos/cria": {
+      "$ref": "./openapi/produto.yaml#/paths/~1api~1cardapio~1produtos~1cria"
+    },
+    "/api/cardapio/produtos/edita/{id_produto}": {
+      "$ref": "./openapi/produto.yaml#/paths/~1api~1cardapio~1produtos~1edita~1{id_produto}"
+    },
+    "/api/cardapio/produtos/deleta/{id_produto}": {
+      "$ref": "./openapi/produto.yaml#/paths/~1api~1cardapio~1produtos~1deleta~1{id_produto}"
+    }
+  }
+}

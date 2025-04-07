@@ -1,0 +1,146 @@
+paths:
+  # Lista
+  /api/cardapio/mesa:
+    get:
+      summary: Lista todas as mesas
+      tags: ["Mesas"]
+      responses:
+        '200':
+          description: Lista de mesas retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mesa'
+  # Lista por ID
+  /api/cardapio/mesa/{id_mesa}:
+    get:
+      summary: Lista uma mesa por ID
+      tags: ["Mesas"]
+      parameters:
+        - name: id_mesa
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Mesa retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mesa'
+  # Cria
+  /api/cardapio/mesa/cria:
+    post:
+      summary: Cria uma nova mesa
+      tags: ["Mesas"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nro_mesa:
+                  type: integer
+                status_pagamento:
+                  type: boolean
+      responses:
+        '200':
+          description: Mesa criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mesa'
+  # Edita
+  /api/cardapio/mesa/edita/{id_mesa}:
+    put:
+      summary: Edita uma mesa
+      tags: ["Mesas"]
+      parameters:
+        - name: id_mesa
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nro_mesa:
+                  type: integer
+                status_pagamento:
+                  type: boolean
+      responses:
+        '200':
+          description: Mesa editada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mesa'
+  # Deleta
+  /api/cardapio/mesa/deleta/{id_mesa}:
+    delete:
+      summary: Deleta uma mesa
+      tags: ["Mesas"]
+      parameters:
+        - name: id_mesa
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Mesa deletada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: "null"
+
+components:
+  schemas:
+    Mesa:
+      type: object
+      properties:
+        comanda:
+          type: integer
+        nro_mesa:
+          type: integer
+        status_pagamento:
+          type: boolean
