@@ -91,19 +91,19 @@ class ProdutoRepository extends BaseRepository
     public function cria(Produto $produto): array
     {
         $sql = "
-            INSERT INTO produto (id_categoria, nome, descricao, imagem, preco, eh_vegano, eh_sem_gluten, porcoes, )
-            VALUES (:id_categoria, :nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes);
+            INSERT INTO produto (id_categoria, nome, descricao, imagem, preco, eh_vegano, eh_sem_gluten, porcoes)
+            VALUES (:id_categoria, :nome, :descricao, :imagem, :preco, :eh_vegano, :eh_sem_gluten, :porcoes)
         ";
 
         $params = [
+            ':id_categoria'  => $produto->getCategoria()->getIdCategoria(),
             ':nome'          => $produto->getNome(),
             ':descricao'     => $produto->getDescricao(),
             ':imagem'        => $produto->getImagem(),
             ':preco'         => $produto->getPreco(),
             ':eh_vegano'     => $produto->isEhVegano(),
             ':eh_sem_gluten' => $produto->isEhSemGluten(),
-            ':porcoes'       => $produto->getPorcoes(),
-            ':id_categoria'     => $produto->getCategoria()->getIdCategoria()
+            ':porcoes'       => $produto->getPorcoes()
         ];
 
         try {
@@ -129,8 +129,7 @@ class ProdutoRepository extends BaseRepository
     {
         $sql = "
             UPDATE produto
-            SET 
-                id_categoria = :id_categoria,
+            SET id_categoria = :id_categoria,
                 nome = :nome,
                 descricao = :descricao,
                 imagem = :imagem,
