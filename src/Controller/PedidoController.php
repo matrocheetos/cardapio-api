@@ -47,20 +47,32 @@ final class PedidoController extends AbstractController
         ], $result['status']);
     }
 
+    #[Route('/pedido/{id}', name: 'pedido_lista_id', methods: ['GET'])]
+    public function listaId(PedidoRepository $pedidoRepository, int $id): JsonResponse
+    {
+        $result = $pedidoRepository->listaId($id);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
+
+
     #[Route('/pedido', name: 'pedido_cria', methods: ['POST'])]
     #[OA\Post(
         path: "/api/cardapio/pedido",
         summary: "Registra novo pedido",
         tags: ["Pedidos"],
         requestBody: new OA\RequestBody(
-            required: true,
             content: new OA\JsonContent(
                 type: "object",
                 properties: [
                     new OA\Property(property: "comanda", type: "integer", example: 1, description: "Número da comanda associada ao pedido"),
-                    new OA\Property(property: "idProduto", type: "integer", example: 3, description: "ID do produto solicitado"),
+                    new OA\Property(property: "id_produto", type: "integer", example: 3, description: "ID do produto solicitado"),
                     new OA\Property(property: "observacao", type: "string", example: "Sem cebola", description: "Observação opcional para o pedido")
-                ]
+                ],
+                required: ["comanda", "id_produto"]
             )
         ),
         responses: [
@@ -83,17 +95,15 @@ final class PedidoController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         foreach ($data as $p) {
-            $pedido = new Pedido(
-                $p['comanda'],
-                $p['idProduto'],
-                $p['observacao']
-            );
+            $pedido = new Pedido();
+            $pedido->fromArray($p);
 
             $result = $pedidoRepository->cria($pedido);
             
             if($result['status'] === 400) {
                 return $this->json([
                     'msg'    => $result['msg'],
+                    'result' => null,
                     'status' => 'error'
                 ], $result['status']);
             }
@@ -101,6 +111,7 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
+            'result' => $result['result'],
             'status' => 'success'
         ], $result['status']);
     }

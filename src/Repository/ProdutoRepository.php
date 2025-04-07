@@ -148,7 +148,7 @@ class ProdutoRepository extends BaseRepository
             ':preco'         => $produto->getPreco(),
             ':eh_vegano'     => $produto->isEhVegano(),
             ':eh_sem_gluten' => $produto->isEhSemGluten(),
-            ':porcoes'       => $produto->getPreco(),
+            ':porcoes'       => $produto->getPorcoes(),
             ':id_produto'    => $produto->getIdProduto()
         ];
 

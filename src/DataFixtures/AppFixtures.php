@@ -88,15 +88,19 @@ class AppFixtures extends Fixture
         $manager->persist($mesa2);
 
         // criar Pedidos
-        $pedido1 = new Pedido($mesa1, $coca, 'Com gelo');
+        $pedido1 = new Pedido();
         $pedido1->setMesa($mesa1)
                 ->setProduto($coca)
+                ->setObservacao('Com gelo')
+                ->setDataPedido(new \DateTime())
                 ->setStatusPedido('PREPARANDO');
         $manager->persist($pedido1);
 
-        $pedido2 = new Pedido($mesa2, $hamburguer, 'Bem passado');
+        $pedido2 = new Pedido();
         $pedido2->setMesa($mesa2)
                 ->setProduto($hamburguer)
+                ->setObservacao('Bem passado')
+                ->setDataPedido(new \DateTime())
                 ->setStatusPedido('ENTREGUE');
         $manager->persist($pedido2);
 

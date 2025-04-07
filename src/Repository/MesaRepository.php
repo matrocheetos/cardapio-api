@@ -17,27 +17,23 @@ class MesaRepository extends BaseRepository
         parent::__construct($registry, Mesa::class, $databaseService);
     }
 
-    public function cria($request): array
+    public function lista(): array
     {
-        $data = json_decode($request->getContent(), true);
-
-        $mesa = new Mesa();
-
         $sql = "
-            INSERT INTO MESA (NRO_MESA)
-            VALUES (:nro_mesa)
+            SELECT
+                comanda,
+                nro_mesa,
+                status_pagamento
+            FROM mesa
+            ORDER BY comanda ASC
         ";
 
-        $params = [
-            ':nro_mesa' => $data['nro_mesa']
-        ];
-
         try {
-            $resultMesa = $this->db->insere($sql, $params);
+            $result = $this->db->consulta($sql);
         } catch (\Exception $e) {
             return [
                 'status' => 400,
-                'msg'    => 'Erro ao cadastrar produto: '.$e->getMessage(),
+                'msg'    => 'Erro ao listar comandas: '.$e->getMessage(),
                 'result' => null
             ];
         }
@@ -45,7 +41,178 @@ class MesaRepository extends BaseRepository
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $resultMesa
+            'result' => $result
+        ];
+    }
+
+    public function listaId(int $comanda): array
+    {
+        $sql = "
+            SELECT
+                comanda,
+                nro_mesa,
+                status_pagamento
+            FROM mesa
+            WHERE comanda = :comanda
+        ";
+
+        $params = [
+            ':comanda' => $comanda
+        ];
+
+        try {
+            $result = $this->db->consulta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao listar comanda: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $result
+        ];
+    }
+
+    public function listaNroMesa(int $nroMesa): array
+    {
+        $sql = "
+            SELECT
+                comanda,
+                nro_mesa,
+                status_pagamento
+            FROM mesa
+            WHERE nro_mesa = :nro_mesa
+        ";
+
+        $params = [
+            ':nro_mesa' => $nroMesa
+        ];
+
+        try {
+            $result = $this->db->consulta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao listar mesa: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $result
+        ];
+    }
+
+    public function cria(Mesa $mesa): array
+    {
+        $sql = "
+            INSERT INTO mesa (nro_mesa, status_pagamento)
+            VALUES (:nro_mesa, :status_pagamento)
+        ";
+
+        $params = [
+            ':nro_mesa'         => $mesa->getNroMesa(),
+            ':status_pagamento' => $mesa->getStatusPagamento()
+        ];
+
+        try {
+            $result = $this->db->insere($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao gerar comanda: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        $mesa->setComanda($result['id']);
+
+        return [
+            'status' => 200,
+            'msg'    => 'Comanda gerada com sucesso.',
+            'result' => $mesa->toArray()
+        ];
+    }
+
+    public function edita(Mesa $mesa): array
+    {
+        $sql = "
+            UPDATE mesa
+            SET nro_mesa = :nro_mesa,
+                status_pagamento = :status_pagamento
+            WHERE comanda = :comanda
+        ";
+
+        $params = [
+            ':nro_mesa'         => $mesa->getNroMesa(),
+            ':status_pagamento' => $mesa->getStatusPagamento(),
+            ':comanda'          => $mesa->getComanda()
+        ];
+
+        try {
+            $result = $this->db->atualiza($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao editar comanda: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        if(!$result) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao editar comanda',
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => 'Comanda editada com sucesso',
+            'result' => $mesa->toArray()
+        ];
+    }
+
+    public function deleta(Mesa $mesa): array
+    {
+        $sql = "
+            DELETE FROM mesa
+            WHERE comanda = :comanda
+        ";
+
+        $params = [
+            ':comanda' => $mesa->getComanda()
+        ];
+
+        try {
+            $result = $this->db->deleta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao deletar comanda: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        if(!$result) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao deletar comanda',
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => 'Comanda deletada com sucesso',
+            'result' => null
         ];
     }
 }

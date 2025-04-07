@@ -53,9 +53,9 @@ class Mesa
         return $this;
     }
 
-    public function getStatusPagamento(): bool
+    public function getStatusPagamento(): int
     {
-        return $this->statusPagamento;
+        return $this->statusPagamento ? 1 : 0;
     }
 
     public function setStatusPagamento(bool|int $statusPagamento): static
@@ -71,5 +71,24 @@ class Mesa
             'nro_mesa'         => $this->getNroMesa(),
             'status_pagamento' => $this->getStatusPagamento(),
         ];
+    }
+
+    public static function fromArray(array $data): self
+    {
+        if (!isset($data['nro_mesa'])) {
+            throw new \InvalidArgumentException('Dados incompletos ou inválidos para a mesa.');
+        }
+
+        $mesa = new self();
+        $mesa->setNroMesa($data['nro_mesa']);
+
+        if (isset($data['comanda'], $data['status_pagamento'])) {
+            $mesa->setComanda($data['comanda']);
+            $mesa->setStatusPagamento($data['status_pagamento']);
+        } else {
+            $mesa->setStatusPagamento(false);
+        }
+
+        return $mesa;
     }
 }

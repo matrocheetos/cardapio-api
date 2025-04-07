@@ -17,9 +17,8 @@ class PedidoRepository extends BaseRepository
         parent::__construct($registry, Pedido::class, $databaseService);
     }
 
-    public function lista()
+    public function lista(): array
     {
-
         $sql = "
             SELECT
                 id_pedido,
@@ -28,7 +27,9 @@ class PedidoRepository extends BaseRepository
                 observacao,
                 data_pedido,
                 status_pedido
-            FROM pedido;
+            FROM pedido
+            WHERE status_pedido IN ('PREPARANDO', 'PRONTO')
+            ORDER BY data_pedido ASC
         ";
 
         try {
@@ -40,19 +41,41 @@ class PedidoRepository extends BaseRepository
                 'result' => null
             ];
         }
-        
-        // foreach($result as $p) {
-        //     $pedido = new Pedido(
-        //         $p['COMANDA'],
-        //         $p['ID_PRODUTO'],
-        //         $p['OBSERVACAO']);
-        //     $pedido->setIdPedido($p['ID_PEDIDO']);
-        //     $pedido->setDataPedido($p['DATA_PEDIDO']);
-        //     $pedido->setStatusPedido($p['STATUS_PEDIDO']);
-            
-        //     $resultPedidos[] = $pedido;
-        //     echo '<pre>'; print_r($pedido); exit;
-        // }
+
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $result
+        ];
+    }
+
+    public function listaId(int $id): array
+    {
+        $sql = "
+            SELECT
+                id_pedido,
+                comanda,
+                id_produto,
+                observacao,
+                data_pedido,
+                status_pedido
+            FROM pedido
+            WHERE id_pedido = :id_pedido
+        ";
+
+        $params = [
+            ':id_pedido' => $id
+        ];
+
+        try {
+            $result = $this->db->consulta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao listar pedido: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
 
         return [
             'status' => 200,
@@ -64,14 +87,16 @@ class PedidoRepository extends BaseRepository
     public function cria(Pedido $pedido): array
     {
         $sql = "
-            INSERT INTO PEDIDO (COMANDA, ID_PRODUTO, OBSERVACAO)
-            VALUES (:comanda, :id_produto, :observacao)
+            INSERT INTO pedido (comanda, id_produto, observacao, data_pedido, status_pedido)
+            VALUES (:comanda, :id_produto, :observacao, :data_pedido, :status_pedido)
         ";
 
         $params = [
-            ':comanda'       => $pedido->getMesa(),
-            ':id_produto'    => $pedido->getProduto(),
-            ':observacao'    => $pedido->getObservacao()
+            ':comanda'       => $pedido->getMesa()->getComanda(),
+            ':id_produto'    => $pedido->getProduto()->getIdProduto(),
+            ':observacao'    => $pedido->getObservacao(),
+            ':data_pedido'   => $pedido->getDataPedido(),
+            ':status_pedido' => $pedido->getStatusPedido()
         ];
 
         try {
@@ -79,13 +104,81 @@ class PedidoRepository extends BaseRepository
         } catch (\Exception $e) {
             return [
                 'status' => 400,
-                'msg'    => 'Erro ao cadastrar pedido: '.$e->getMessage()
+                'msg'    => 'Erro ao cadastrar pedido: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        $pedido->setIdPedido($result['id']);
+
+        return [
+            'status' => 201,
+            'msg'    => 'Pedido cadastrado com sucesso!',
+            'result' => $pedido->toArray()
+        ];
+    }
+
+    public function edita(Pedido $pedido): array
+    {
+        $sql = "
+            UPDATE pedido
+            SET comanda = :comanda,
+                id_produto = :id_produto,
+                observacao = :observacao,
+                status_pedido = :status_pedido
+            WHERE id_pedido = :id_pedido
+        ";
+
+        $params = [
+            ':comanda'       => $pedido->getMesa()->getComanda(),
+            ':id_produto'    => $pedido->getProduto()->getIdProduto(),
+            ':observacao'    => $pedido->getObservacao(),
+            ':status_pedido' => $pedido->getStatusPedido(),
+            ':id_pedido'     => $pedido->getIdPedido()
+        ];
+
+        try {
+            $this->db->atualiza($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao editar pedido: '.$e->getMessage(),
+                'result' => null
             ];
         }
 
         return [
-            'status' => 201,
-            'msg'    => 'Pedido cadastrado com sucesso'
+            'status' => 200,
+            'msg'    => 'Pedido atualizado com sucesso!',
+            'result' => $pedido->toArray()
+        ];
+    }
+
+    public function deleta(Pedido $pedido): array
+    {
+        $sql = "
+            DELETE FROM pedido
+            WHERE id_pedido = :id_pedido
+        ";
+
+        $params = [
+            ':id_pedido' => $pedido->getIdPedido()
+        ];
+
+        try {
+            $this->db->deleta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao deletar pedido: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => 'Pedido deletado com sucesso!',
+            'result' => null
         ];
     }
 }

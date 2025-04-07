@@ -26,7 +26,7 @@ class Pedido
 
     #[ORM\ManyToOne(targetEntity: Mesa::class)]
     #[ORM\JoinColumn(name: "comanda", referencedColumnName: "comanda", nullable: false, onDelete: "CASCADE")]
-    #[OA\Property(description: "Mesa associada ao pedido", example: 1)]
+    #[OA\Property(description: "Comanda associada ao pedido", example: 1)]
     private Mesa $mesa;
 
     #[ORM\ManyToOne(targetEntity: Produto::class)]
@@ -45,15 +45,6 @@ class Pedido
     #[ORM\Column(type: "string", length: 10, enumType: StatusPedido::class)]
     #[OA\Property(description: "Status do pedido", example: "PREPARANDO", enum: ["PREPARANDO", "PRONTO", "ENTREGUE"])]
     private StatusPedido $statusPedido;
-
-    public function __construct(Mesa $mesa, Produto $produto, ?string $observacao = null)
-    {
-        $this->mesa = $mesa;
-        $this->produto = $produto;
-        $this->observacao = $observacao;
-        $this->dataPedido = new DateTime();
-        $this->statusPedido = StatusPedido::PREPARANDO;
-    }
 
     public function getIdPedido(): ?int
     {
@@ -103,9 +94,9 @@ class Pedido
         return $this;
     }
 
-    public function getDataPedido(): ?DateTimeInterface
+    public function getDataPedido(): ?string
     {
-        return $this->dataPedido;
+        return $this->dataPedido->format('Y-m-d H:i:s');
     }
 
     public function setDataPedido(DateTimeInterface|string $dataPedido): static
@@ -117,9 +108,9 @@ class Pedido
         return $this;
     }
 
-    public function getStatusPedido(): ?StatusPedido
+    public function getStatusPedido(): ?string
     {
-        return $this->statusPedido;
+        return $this->statusPedido->value;
     }
 
     public function setStatusPedido(StatusPedido|string $statusPedido): static
@@ -149,4 +140,34 @@ class Pedido
             'status_pedido' => $this->getStatusPedido()?->value
         ];
     }
+
+    public function fromArray(array $data, int $id = null): self
+    {
+        if (!isset($data['comanda'], $data['id_produto'], $data['observacao'])) {
+            throw new \InvalidArgumentException('Dados incompletos ou inválidos para o pedido.');
+        }
+
+        $pedido = new self();
+        $pedido
+            ->setMesa((new Mesa())->setComanda($data['comanda']))
+            ->setProduto((new Produto)->setIdProduto($data['id_produto']))
+            ->setObservacao($data['observacao'])
+        ;
+
+        if (isset($data['data_pedido'], $data['status_pedido'])) {
+            $pedido->setDataPedido($data['data_pedido']);
+            $pedido->setIdPedido($data['id_pedido']);
+        } else {
+            $pedido->setDataPedido(new DateTime());
+            $pedido->setStatusPedido(StatusPedido::PREPARANDO);
+        }
+
+        if (isset($id)) {
+            $pedido->setIdPedido($id);
+        }
+
+        return $pedido;
+    }
+
+
 }
