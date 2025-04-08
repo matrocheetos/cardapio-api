@@ -55,12 +55,20 @@ paths:
             schema:
               type: object
               properties:
-                comanda:
-                  type: integer
-                id_produto:
-                  type: integer
-                observacao:
-                  type: string
+                pedido:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      comanda:
+                        type: integer
+                      id_produto:
+                        type: integer
+                      observacao:
+                        type: string
+                    required:
+                      - comanda
+                      - id_produto
       responses:
         '200':
           description: Pedido criado com sucesso

@@ -40,8 +40,15 @@ final class PedidoController extends AbstractController
     public function cria(Request $request, PedidoRepository $pedidoRepository): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
-        foreach ($data as $p) {
+        if (!isset($data['pedido'])) {
+            return $this->json([
+                'msg'    => 'Pedido não informado',
+                'result' => null,
+                'status' => 'error'
+            ], 400);
+        }
+        
+        foreach ($data['pedido'] as $p) {
             $pedido = new Pedido();
             $pedido->fromArray($p);
 
@@ -83,7 +90,7 @@ final class PedidoController extends AbstractController
     {
         $pedido = new Pedido();
         $pedido->setIdPedido($id);
-        
+
         $result = $pedidoRepository->deleta($pedido);
 
         return $this->json([
