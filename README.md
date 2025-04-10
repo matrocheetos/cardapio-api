@@ -1,7 +1,26 @@
 # API para Cardápio Virtual
 
-## Swagger:
+## Desenvolvimento local
+
+Iniciar servidor de desenvolvimento:
+
 ```
-docker pull docker.swagger.io/swaggerapi/swagger-ui
-docker run -d --name swagger-ui -p 8081:8080 -e SWAGGER_JSON_URL=http://localhost:8001/api/doc.json docker.swagger.io/swaggerapi/swagger-ui
+symfony server:start --no-tls --port=8001 -d
+```
+
+Parar servidor de desenvolvimento:
+```
+symfony server:stop
+```
+
+# Deploy
+
+```
+dep deploy
+```
+
+## Documentação:
+
+```
+https://pratofacil.dynv6.net/swagger/index.html
 ```
