@@ -84,6 +84,41 @@ class PedidoRepository extends BaseRepository
         ];
     }
 
+    public function listaComanda(int $comanda):array
+    {
+        $sql = "
+            SELECT
+                id_pedido,
+                comanda,
+                id_produto,
+                observacao,
+                data_pedido,
+                status_pedido
+            FROM pedido
+            WHERE comanda = :comanda
+        ";
+
+        $params = [
+            ':comanda' => $comanda
+        ];
+
+        try {
+            $result = $this->db->consulta($sql, $params);
+        } catch (\Exception $e) {
+            return [
+                'status' => 400,
+                'msg'    => 'Erro ao listar pedidos: '.$e->getMessage(),
+                'result' => null
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'msg'    => null,
+            'result' => $result
+        ];
+    }
+
     public function cria(Pedido $pedido): array
     {
         $sql = "

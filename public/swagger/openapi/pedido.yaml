@@ -43,6 +43,31 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+  # Lista por comanda
+  /api/cardapio/pedido/comanda/{comanda}:
+    get:
+      summary: Lista pedidos por comanda
+      tags: ["Pedidos"]
+      parameters:
+        - name: comanda
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pedidos retornados com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pedido'
   # Cria
   /api/cardapio/pedido/cria:
     post:

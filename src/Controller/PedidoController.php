@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\PedidoRepository;
 use App\Entity\Pedido;
-use OpenApi\Attributes as OA;
 
 final class PedidoController extends AbstractController
 {
@@ -35,6 +33,16 @@ final class PedidoController extends AbstractController
         ], $result['status']);
     }
 
+    #[Route('/pedido/comanda/{comanda}', name: 'pedido_lista_id', methods: ['GET'])]
+    public function listaComanda(PedidoRepository $pedidoRepository, int $comanda): JsonResponse
+    {
+        $result = $pedidoRepository->listaComanda($comanda);
+
+        return $this->json([
+            'msg'    => $result['msg'],
+            'result' => $result['result']
+        ], $result['status']);
+    }
 
     #[Route('/pedido/cria', name: 'pedido_cria', methods: ['POST'])]
     public function cria(Request $request, PedidoRepository $pedidoRepository): JsonResponse
@@ -47,7 +55,6 @@ final class PedidoController extends AbstractController
                 'status' => 'error'
             ], 400);
         }
-        
         foreach ($data['pedido'] as $p) {
             $pedido = Pedido::fromArray($p);
             $result = $pedidoRepository->cria($pedido);
