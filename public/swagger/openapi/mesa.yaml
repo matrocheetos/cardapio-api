@@ -18,6 +18,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Mesa'
+                  error:
+                    type: boolean
   # Lista por ID
   /api/cardapio/mesa/{id_mesa}:
     get:
@@ -43,6 +45,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Mesa'
+                  error:
+                    type: boolean
   # Cria
   /api/cardapio/mesa/cria:
     post:
@@ -73,6 +77,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Mesa'
+                  error:
+                    type: boolean
   # Edita
   /api/cardapio/mesa/edita/{id_mesa}:
     put:
@@ -109,6 +115,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Mesa'
+                  error:
+                    type: boolean
   # Deleta
   /api/cardapio/mesa/deleta/{id_mesa}:
     delete:
@@ -132,6 +140,8 @@ paths:
                     type: string
                   result:
                     type: "null"
+                  error:
+                    type: boolean
 
 components:
   schemas:

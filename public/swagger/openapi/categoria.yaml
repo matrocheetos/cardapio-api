@@ -18,6 +18,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Categoria'
+                  error:
+                    type: boolean
   # Lista por ID
   /api/cardapio/categorias/{id_categoria}:
     get:
@@ -35,7 +37,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Categoria'
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Categoria'
+                  error:
+                    type: boolean
   # Cria
   /api/cardapio/categorias/cria:
     post:
@@ -64,6 +75,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/Categoria'
+                error:
+                  type: boolean
   # Edita
   /api/cardapio/categorias/edita/{id_categoria}:
     put:
@@ -98,6 +111,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Categoria'
+                  error:
+                    type: boolean
   # Deleta
   /api/cardapio/categorias/deleta/{id_categoria}:
     delete:
@@ -121,6 +136,8 @@ paths:
                     type: string
                   result:
                     type: "null"
+                  error:
+                    type: boolean
 
 components:
   schemas:

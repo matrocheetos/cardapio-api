@@ -34,14 +34,16 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar comandas: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -66,14 +68,16 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar comanda: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -98,14 +102,16 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar mesa: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -127,7 +133,8 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao gerar comanda: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -136,7 +143,8 @@ class MesaRepository extends BaseRepository
         return [
             'status' => 200,
             'msg'    => 'Comanda gerada com sucesso.',
-            'result' => $mesa->toArray()
+            'result' => $mesa->toArray(),
+            'error'  => false
         ];
     }
 
@@ -161,7 +169,8 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar comanda: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -169,14 +178,16 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar comanda',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Comanda editada com sucesso',
-            'result' => $mesa->toArray()
+            'result' => $mesa->toArray(),
+            'error'  => false
         ];
     }
 
@@ -197,7 +208,8 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar comanda: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -205,14 +217,16 @@ class MesaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar comanda',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Comanda deletada com sucesso',
-            'result' => null
+            'result' => null,
+            'error'  => false
         ];
     }
 }

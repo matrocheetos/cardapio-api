@@ -18,7 +18,8 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -29,7 +30,8 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -40,7 +42,8 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -52,7 +55,7 @@ final class PedidoController extends AbstractController
             return $this->json([
                 'msg'    => 'Pedido não informado',
                 'result' => null,
-                'status' => 'error'
+                'error' => true
             ], 400);
         }
         foreach ($data['pedido'] as $p) {
@@ -62,8 +65,8 @@ final class PedidoController extends AbstractController
             if($result['status'] === 400) {
                 return $this->json([
                     'msg'    => $result['msg'],
-                    'result' => null,
-                    'status' => 'error'
+                    'result' => $result['result'],
+                    'error'  => $result['error']
                 ], $result['status']);
             }
         }
@@ -71,7 +74,7 @@ final class PedidoController extends AbstractController
         return $this->json([
             'msg'    => $result['msg'],
             'result' => $result['result'],
-            'status' => 'success'
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -86,7 +89,8 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -100,7 +104,8 @@ final class PedidoController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 }

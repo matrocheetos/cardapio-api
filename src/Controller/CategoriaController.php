@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\CategoriaRepository;
 use App\Entity\Categoria;
-use OpenApi\Attributes as OA;
 
 final class CategoriaController extends AbstractController
 {
@@ -20,7 +19,8 @@ final class CategoriaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -31,7 +31,8 @@ final class CategoriaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -45,7 +46,8 @@ final class CategoriaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -59,7 +61,8 @@ final class CategoriaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -73,7 +76,8 @@ final class CategoriaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 }

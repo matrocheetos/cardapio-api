@@ -33,14 +33,16 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar categorias: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -64,14 +66,16 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar categoria: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -92,7 +96,8 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao cadastrar categoria: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -101,7 +106,8 @@ class CategoriaRepository extends BaseRepository
         return [
             'status' => 200,
             'msg'    => 'Categoria cadastrada com sucesso',
-            'result' => $categoria->toArray()
+            'result' => $categoria->toArray(),
+            'error'  => false
         ];
     }
 
@@ -124,7 +130,8 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar categoria: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -132,14 +139,16 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar categoria.',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Categoria editada com sucesso!',
-            'result' => $categoria->toArray()
+            'result' => $categoria->toArray(),
+            'error'  => false
         ];
     }
 
@@ -160,7 +169,8 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar categoria: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -168,14 +178,16 @@ class CategoriaRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar categoria.',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Categoria deletada com sucesso!',
-            'result' => null
+            'result' => null,
+            'error'  => false
         ];
     }
 }

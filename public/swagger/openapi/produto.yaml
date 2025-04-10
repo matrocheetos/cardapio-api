@@ -18,6 +18,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Produto"
+                  error:
+                    type: boolean
   # Lista por ID
   /api/cardapio/produtos/{id_produto}:
     get:
@@ -43,6 +45,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Produto"
+                  error:
+                    type: boolean
   # Cria
   /api/cardapio/produtos/cria:
     post:
@@ -86,6 +90,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Produto"
+                  error:
+                    type: boolean
   # Edita
   /api/cardapio/produtos/edita/{id_produto}:
     put:
@@ -135,6 +141,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Produto"
+                  error:
+                    type: boolean
 
   # Deleta
   /api/cardapio/produtos/deleta/{id_produto}:
@@ -159,6 +167,8 @@ paths:
                     type: string
                   result:
                     type: "null"
+                  error:
+                    type: boolean
 
 components:
   schemas:

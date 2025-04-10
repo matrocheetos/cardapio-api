@@ -39,14 +39,16 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar produtos: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -77,14 +79,16 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar produtos: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -112,7 +116,8 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao cadastrar produto: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -121,7 +126,8 @@ class ProdutoRepository extends BaseRepository
         return [
             'status' => 200,
             'msg'    => 'Produto cadastrado com sucesso!',
-            'result' => $produto->toArray()
+            'result' => $produto->toArray(),
+            'error'  => false
         ];
     }
 
@@ -158,7 +164,8 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar produto: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -166,14 +173,16 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar produto.',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Produto editado com sucesso!',
-            'result' => $produto->toArray()
+            'result' => $produto->toArray(),
+            'error'  => false
         ];
     }
 
@@ -194,7 +203,8 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar produto: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
@@ -202,14 +212,16 @@ class ProdutoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar produto.',
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Produto deletado com sucesso!',
-            'result' => null
+            'result' => null,
+            'error'  => false
         ];
     }
 }

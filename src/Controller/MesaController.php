@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\MesaRepository;
 use App\Entity\Mesa;
-use OpenApi\Attributes as OA;
 
 final class MesaController extends AbstractController
 {
@@ -19,7 +18,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -30,7 +30,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -41,7 +42,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -55,7 +57,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -69,7 +72,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 
@@ -83,7 +87,8 @@ final class MesaController extends AbstractController
 
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result']
+            'result' => $result['result'],
+            'error'  => $result['error']
         ], $result['status']);
     }
 }

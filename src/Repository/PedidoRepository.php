@@ -38,14 +38,16 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar pedidos: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -73,14 +75,16 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar pedido: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -108,14 +112,16 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao listar pedidos: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => null,
-            'result' => $result
+            'result' => $result,
+            'error'  => false
         ];
     }
 
@@ -140,16 +146,18 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao cadastrar pedido: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         $pedido->setIdPedido($result['id']);
 
         return [
-            'status' => 201,
+            'status' => 200,
             'msg'    => 'Pedido cadastrado com sucesso!',
-            'result' => $pedido->toArray()
+            'result' => null,
+            'error'  => false
         ];
     }
 
@@ -178,14 +186,16 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao editar pedido: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Pedido atualizado com sucesso!',
-            'result' => $pedido->toArray()
+            'result' => $pedido->toArray(),
+            'error'  => false
         ];
     }
 
@@ -206,14 +216,16 @@ class PedidoRepository extends BaseRepository
             return [
                 'status' => 400,
                 'msg'    => 'Erro ao deletar pedido: '.$e->getMessage(),
-                'result' => null
+                'result' => null,
+                'error'  => true
             ];
         }
 
         return [
             'status' => 200,
             'msg'    => 'Pedido deletado com sucesso!',
-            'result' => null
+            'result' => null,
+            'error'  => false
         ];
     }
 }

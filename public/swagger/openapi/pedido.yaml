@@ -18,6 +18,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+                  error:
+                    type: boolean
   # Lista por ID
   /api/cardapio/pedido/{id_pedido}:
     get:
@@ -43,6 +45,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+                  error:
+                    type: boolean
   # Lista por comanda
   /api/cardapio/pedido/comanda/{comanda}:
     get:
@@ -68,6 +72,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+                  error:
+                    type: boolean
   # Cria
   /api/cardapio/pedido/cria:
     post:
@@ -108,6 +114,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+                  error:
+                    type: boolean
   # Edita
   /api/cardapio/pedido/edita/{id_pedido}:
     put:
@@ -149,6 +157,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Pedido'
+                  error:
+                    type: boolean
   # Deleta
   /api/cardapio/pedido/deleta/{id_pedido}:
     delete:
@@ -172,6 +182,8 @@ paths:
                     type: string
                   result:
                     type: "null"
+                  error:
+                    type: boolean
 
 components:
   schemas:
