@@ -49,9 +49,7 @@ final class PedidoController extends AbstractController
         }
         
         foreach ($data['pedido'] as $p) {
-            $pedido = new Pedido();
-            $pedido->fromArray($p);
-
+            $pedido = Pedido::fromArray($p);
             $result = $pedidoRepository->cria($pedido);
             
             if($result['status'] === 400) {

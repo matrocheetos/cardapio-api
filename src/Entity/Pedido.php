@@ -27,12 +27,12 @@ class Pedido
     #[ORM\ManyToOne(targetEntity: Mesa::class)]
     #[ORM\JoinColumn(name: "comanda", referencedColumnName: "comanda", nullable: false, onDelete: "CASCADE")]
     #[OA\Property(description: "Comanda associada ao pedido", example: 1)]
-    private Mesa $mesa;
+    private ?Mesa $mesa = null;
 
     #[ORM\ManyToOne(targetEntity: Produto::class)]
     #[ORM\JoinColumn(name: "id_produto", referencedColumnName: "id_produto", nullable: false, onDelete: "CASCADE")]
     #[OA\Property(description: "Produto solicitado", example: 1)]
-    private Produto $produto;
+    private ?Produto $produto = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[OA\Property(description: "Observação opcional sobre o pedido", example: "Sem gelo")]
@@ -65,7 +65,7 @@ class Pedido
 
     public function setMesa(Mesa $mesa): static
     {
-        $this->comanda = $mesa;
+        $this->mesa = $mesa;
 
         return $this;
     }
@@ -132,27 +132,29 @@ class Pedido
     {
         return [
             'id_pedido'     => $this->getIdPedido(),
-            'comanda'       => $this->getMesa()?->getComanda(),
-            'nro_mesa'      => $this->getMesa()?->getNroMesa(),
-            'produto'       => $this->getProduto()?->toArray(),
+            'comanda'       => $this->getMesa()->getComanda(),
+            'produto'       => $this->getProduto()->toArray(),
             'observacao'    => $this->getObservacao(),
             'data_pedido'   => $this->getDataPedido(),
             'status_pedido' => $this->getStatusPedido()
         ];
     }
 
-    public function fromArray(array $data, int $id = null): self
+    public static function fromArray(array $data, int $id = null): self
     {
-        if (!isset($data['comanda'], $data['id_produto'], $data['observacao'])) {
+        if (!isset($data['comanda'], $data['id_produto'])) {
             throw new \InvalidArgumentException('Dados incompletos ou inválidos para o pedido.');
         }
 
         $pedido = new self();
         $pedido
             ->setMesa((new Mesa())->setComanda($data['comanda']))
-            ->setProduto((new Produto)->setIdProduto($data['id_produto']))
-            ->setObservacao($data['observacao'])
+            ->setProduto((new Produto())->setIdProduto($data['id_produto']))
         ;
+
+        if(isset($data['observacao'])) {
+            $pedido->setObservacao($data['observacao']);
+        }
 
         if (isset($data['data_pedido'], $data['status_pedido'])) {
             $pedido->setDataPedido($data['data_pedido']);
@@ -161,6 +163,8 @@ class Pedido
             $pedido->setDataPedido(new DateTime());
             $pedido->setStatusPedido(StatusPedido::PREPARANDO);
         }
+
+
 
         if (isset($id)) {
             $pedido->setIdPedido($id);
