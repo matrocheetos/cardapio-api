@@ -92,13 +92,20 @@ class PedidoRepository extends BaseRepository
     {
         $sql = "
             SELECT
-                id_pedido,
-                comanda,
-                id_produto,
-                observacao,
-                data_pedido,
-                status_pedido
-            FROM pedido
+                p1.id_pedido,
+                p1.comanda,
+                p1.observacao,
+                p1.data_pedido,
+                p1.status_pedido,
+                p1.id_produto,
+                p2.nome,
+                p2.descricao,
+                p2.preco,
+                p2.eh_vegano,
+                p2.eh_sem_gluten,
+                p2.imagem
+            FROM pedido p1
+                LEFT JOIN produto p2 ON pedido.id_produto = produto.id_produto
             WHERE comanda = :comanda
         ";
 
