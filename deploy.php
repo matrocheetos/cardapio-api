@@ -5,7 +5,7 @@ require 'recipe/symfony.php';
 
 // Config
 
-set('repository', 'https://github.com/matrocheetos/cardapio-api.git');
+set('repository', 'git@github.com:matrocheetos/cardapio-api.git');
 
 set('ssh_multiplexing', false);
 
