@@ -8,7 +8,7 @@ info:
 servers:
   - url: https://pratofacil.dynv6.net
     description: API de Cardápio Digital
-  - url: http://localhost:8001
+  - url: http://localhost:8000
     description: API de Cardápio Digital (local)
 
 paths:

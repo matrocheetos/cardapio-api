@@ -36,13 +36,42 @@ final class PedidoController extends AbstractController
     }
 
     #[Route('/pedido/comanda/{comanda}', name: 'pedido_lista_id', methods: ['GET'])]
-    public function listaComanda(PedidoRepository $pedidoRepository, int $comanda): JsonResponse
+    public function listaComanda(PedidoRepository $pedidoRepository, ProdutoRepository $produtoRepository, int $comanda): JsonResponse
     {
         $result = $pedidoRepository->listaComanda($comanda);
 
+        foreach ($result['result'] as $pedido) {
+            $pedidos[] = Pedido::fromArray($pedido);
+        }
+
+        // exemplo retorno
+        // {
+        //     comanda: number
+        //     total: number
+        //     pedidos: [
+        //         {
+        //             id_pedido: number
+        //             data_pedido: string
+        //             status_pedido
+        //             produto: {
+        //                 id: number,
+        //                 name: string,
+        //                 preco: number,
+        //                 observacao: string,
+        //                 quantidade: number,
+        //                 isGlutenFree: boolean,
+        //                 isVegan: boolean,
+        //                 description: string,
+        //                 image: Base64
+        //             }
+        //         },
+        //         { ... }
+        //     ]
+        // }
+
         return $this->json([
             'msg'    => $result['msg'],
-            'result' => $result['result'],
+            'result' => $pedidos,
             'error'  => $result['error']
         ], $result['status']);
     }

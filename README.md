@@ -1,11 +1,20 @@
 # API para Cardápio Virtual
 
-## Desenvolvimento local
+## Desenvolvimento local (Docker)
+
+Iniciar container e serviços (aplicação, nginx e MySQL)
+
+```
+chmod +x setup.sh
+./setup.sh
+```
+
+## Desenvolvimento local (Symfony)
 
 Iniciar servidor de desenvolvimento:
 
 ```
-symfony server:start --no-tls --port=8001 -d
+symfony server:start --no-tls --port=8000 -d
 ```
 
 Parar servidor de desenvolvimento:
