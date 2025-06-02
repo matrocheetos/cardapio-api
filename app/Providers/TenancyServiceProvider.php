@@ -103,6 +103,16 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+        Middleware\InitializeTenancyByRequestData::$header = null;
+        Middleware\InitializeTenancyByRequestData::$queryParameter = 'restaurante';
+        Middleware\InitializeTenancyByRequestData::$onFail = function ($exception, $request, $next) {
+            return response()->json([
+                'msg'    => 'Restaurante não encontrado',
+                'result' => null,
+                'error'  => true
+            ], 404);
+        };
     }
 
     protected function bootEvents()
