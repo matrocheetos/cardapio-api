@@ -1,0 +1,1 @@
+docker run --name=cardapio-api -e SERVER_NAME=:80 -p 8000:80 -v %~dp0:/app dunglas/frankenphp

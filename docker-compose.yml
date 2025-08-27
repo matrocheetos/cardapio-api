@@ -11,7 +11,7 @@ services:
       - "8443:443"
     volumes:
       - ./:/app
-      - ./.docker/Caddyfile:/etc/caddy/Caddyfile
+      - ./.docker/Caddyfile.local:/etc/caddy/Caddyfile
     networks:
       - cardapio-network
     depends_on:
