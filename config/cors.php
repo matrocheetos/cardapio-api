@@ -20,8 +20,9 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        'http://cardapio-api.test',
         'http://localhost:8000',
-        'https://localhost:8001', 
+        'https://localhost:8001',
         'https://pf-novo-front.vercel.app',
     ],
 
