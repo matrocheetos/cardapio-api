@@ -90,8 +90,8 @@ return [
      * ```
      */
     'servers' => [
-        'Prod'  => 'https://pratofacil.dynv6.net',
-        'Local' => '',
+        'Prod'  => 'https://pratofacil.dynv6.net/api',
+        'Local' => 'api',
     ],
 
     /**
