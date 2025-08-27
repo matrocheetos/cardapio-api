@@ -2,7 +2,7 @@ import:
   - recipe/laravel.php
 
 config:
-  repository: 'https://github.com/matrocheetos/cardapio-api.git'
+  repository: 'git@github.com:matrocheetos/cardapio-api.git'
   ssh_multiplexing: false
 
 hosts:
