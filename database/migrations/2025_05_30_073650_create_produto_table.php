@@ -26,6 +26,8 @@ return new class extends Migration
                 ->default(false);
             $table->boolean('eh_sem_gluten')
                 ->default(false);
+            $table->boolean('em_estoque')
+                ->default(true);
             $table->unsignedTinyInteger('porcoes')
                 ->nullable();
 

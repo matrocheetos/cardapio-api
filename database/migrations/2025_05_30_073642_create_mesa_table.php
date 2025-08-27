@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('nro_mesa');
             $table->enum('status_pagamento', ['PAGO', 'PENDENTE', 'CANCELADO'])
                 ->default('PENDENTE');
+            $table->timestamps(0);
         });
     }
 

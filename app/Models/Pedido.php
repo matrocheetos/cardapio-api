@@ -2,150 +2,27 @@
 
 namespace App\Models;
 
-use App\Repositories\PedidoRepository;
-use App\Enums\StatusPedidoEnum;
-use DateTimeInterface;
-use DateTime;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Pedido
+class Pedido extends Model
 {
-    private ?int $idPedido = null;
+    use HasFactory;
 
-    private ?Mesa $mesa = null;
+    protected $table = 'pedido';
+    protected $primaryKey = 'id_pedido';
+    public $timestamps = true;
 
-    private ?Produto $produto = null;
-    private ?string $observacao = null;
+    const CREATED_AT = 'data_pedido';
+    const UPDATED_AT = 'data_atualizacao';
 
-    private ?DateTimeInterface $dataPedido = null;
-
-    private StatusPedidoEnum $statusPedido;
-
-    public function getIdPedido(): ?int
+    public function mesa()
     {
-        return $this->idPedido;
+        return $this->belongsTo(Mesa::class, 'comanda');
     }
 
-    public function setIdPedido(int $idPedido): static
+    public function produto()
     {
-        $this->id_pedido = $idPedido;
-
-        return $this;
+        return $this->has(Produto::class, 'id_pedido');
     }
-
-    public function getMesa(): ?Mesa
-    {
-        return $this->mesa;
-    }
-
-    public function setMesa(Mesa $mesa): static
-    {
-        $this->mesa = $mesa;
-
-        return $this;
-    }
-
-    public function getProduto(): ?Produto
-    {
-        return $this->produto;
-    }
-
-    public function setProduto(Produto $produto): static
-    {
-        $this->produto = $produto;
-
-        return $this;
-    }
-
-    public function getObservacao(): ?string
-    {
-        return $this->observacao;
-    }
-
-    public function setObservacao(?string $observacao): static
-    {
-        $this->observacao = $observacao;
-
-        return $this;
-    }
-
-    public function getDataPedido(): ?string
-    {
-        return $this->dataPedido->format('Y-m-d H:i:s');
-    }
-
-    public function setDataPedido(DateTimeInterface|string $dataPedido): static
-    {
-        if (is_string($dataPedido)) {
-            $dataPedido = new DateTime($dataPedido);
-        }
-        $this->dataPedido = $dataPedido;
-        return $this;
-    }
-
-    public function getStatusPedido(): ?string
-    {
-        return $this->statusPedido->value;
-    }
-
-    public function setStatusPedido(StatusPedidoEnum|string $statusPedido): static
-    {
-        if (is_string($statusPedido)) {
-            $statusPedido = StatusPedidoEnum::tryFrom($statusPedido);
-            
-            if (!$statusPedido) {
-                throw new \InvalidArgumentException("Status inválido: $statusPedido. Valores permitidos: " . implode(', ', StatusPedidoEnum::values()));
-            }
-        }
-    
-        $this->statusPedido = $statusPedido;
-    
-        return $this;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id_pedido'     => $this->getIdPedido(),
-            'comanda'       => $this->getMesa()->getComanda(),
-            'produto'       => $this->getProduto()->toArray(),
-            'observacao'    => $this->getObservacao(),
-            'data_pedido'   => $this->getDataPedido(),
-            'status_pedido' => $this->getStatusPedido()
-        ];
-    }
-
-    public static function fromArray(array $data, int $id = null): self
-    {
-        if (!isset($data['comanda'], $data['id_produto'])) {
-            throw new \InvalidArgumentException('Dados incompletos ou inválidos para o pedido.');
-        }
-
-        $pedido = new self();
-        $pedido
-            ->setMesa((new Mesa())->setComanda($data['comanda']))
-            ->setProduto((new Produto())->setIdProduto($data['id_produto']))
-        ;
-
-        if(isset($data['observacao'])) {
-            $pedido->setObservacao($data['observacao']);
-        }
-
-        if (isset($data['data_pedido'], $data['status_pedido'])) {
-            $pedido->setDataPedido($data['data_pedido']);
-            $pedido->setIdPedido($data['id_pedido']);
-        } else {
-            $pedido->setDataPedido(new DateTime());
-            $pedido->setStatusPedido(StatusPedidoEnum::PREPARANDO);
-        }
-
-
-
-        if (isset($id)) {
-            $pedido->setIdPedido($id);
-        }
-
-        return $pedido;
-    }
-
-
 }

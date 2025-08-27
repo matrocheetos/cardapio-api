@@ -23,6 +23,7 @@ return new class extends Migration
                 ->nullable();
             $table->string('database_name', 64)
                 ->unique();
+            $table->timestamps(0);
         });
     }
 

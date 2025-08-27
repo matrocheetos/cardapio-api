@@ -18,10 +18,10 @@ return new class extends Migration
                 ->nullable();
             $table->string('observacao', 255)
                 ->nullable();
-            $table->dateTime('data_pedido', 0)
-                ->default(now());
             $table->enum('status_pedido',['PREPARANDO', 'PRONTO', 'ENTREGUE', 'CANCELADO'])
                 ->default('PREPARANDO');
+            $table->timestamp('data_pedido', 0);
+            $table->timestamp('data_atualizacao', 0);
 
             // Foreign key constraints
             $table->foreign('comanda')
