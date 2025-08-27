@@ -18,11 +18,11 @@ class Pedido extends Model
 
     public function mesa()
     {
-        return $this->belongsTo(Mesa::class, 'comanda');
+        return $this->belongsTo(Mesa::class, 'comanda', 'comanda');
     }
 
     public function produto()
     {
-        return $this->has(Produto::class, 'id_pedido');
+        return $this->belongsTo(Produto::class, 'id_produto', 'id_produto');
     }
 }
