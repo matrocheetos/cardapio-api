@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PedidoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Repositories\PedidoRepository;
@@ -22,13 +23,22 @@ final class PedidoController extends Controller
 
     public function listaId(PedidoRepository $pedidoRepository, int $id): JsonResponse
     {
-        $result = $pedidoRepository->listaId($id);
+        // $result = $pedidoRepository->listaId($id);
+        try {
+            $pedido = new PedidoResource(Pedido::findOrFail($id));
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar pedido: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $pedido,
+            'error'  => false
+        ], 200);
     }
 
     public function listaComanda(PedidoRepository $pedidoRepository, int $comanda): JsonResponse
