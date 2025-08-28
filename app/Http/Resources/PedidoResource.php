@@ -15,11 +15,11 @@ class PedidoResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id_pedido,
-            'comanda' => $this->mesa->comanda,
-            'produto' => $this->produto->nome,
-            'observacao' => $this->observacao,
-            'data_pedido' => $this->data_pedido,
+            'id'            => $this->id_pedido,
+            'comanda'       => $this->mesa->comanda,
+            'produto'       => $this->produto->nome,
+            'observacao'    => $this->observacao,
+            'data_pedido'   => $this->data_pedido,
             'status_pedido' => $this->status_pedido,
         ];
     }

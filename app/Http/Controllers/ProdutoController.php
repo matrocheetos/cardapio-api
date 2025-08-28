@@ -2,33 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Produto;
+use App\Repositories\ProdutoRepository;
+use App\Http\Resources\ProdutoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\ProdutoRepository;
-use App\Models\Produto;
 
 class ProdutoController extends Controller
 {
-    public function lista(ProdutoRepository $produtoRepository): JsonResponse
+    public function lista(): JsonResponse
     {
-        $result = $produtoRepository->lista();
+        try {
+            $produto = ProdutoResource::collection(Produto::all());
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $produto,
+            'error'  => false
+        ], 200);
     }
 
-    public function listaId(int $id, ProdutoRepository $produtoRepository): JsonResponse
+    public function listaId(int $id): JsonResponse
     {
-        $result = $produtoRepository->listaId($id);
+        try {
+            $produto = new ProdutoResource(Produto::findOrFail($id));
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $produto,
+            'error'  => false
+        ], 200);
     }
 
     public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse

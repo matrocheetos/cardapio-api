@@ -2,33 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use App\Repositories\CategoriaRepository;
+use App\Http\Resources\CategoriaResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\CategoriaRepository;
-use App\Models\Categoria;
 
 final class CategoriaController extends Controller
 {
-    public function lista(CategoriaRepository $categoriaRepository): JsonResponse
+    public function lista(): JsonResponse
     {
-        $result = $categoriaRepository->lista();
+        try {
+            $categoria = CategoriaResource::collection(Categoria::all());
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $categoria,
+            'error'  => false
+        ], 200);
     }
 
-    public function listaId(CategoriaRepository $categoriaRepository, int $id): JsonResponse
+    public function listaId(int $id): JsonResponse
     {
-        $result = $categoriaRepository->listaId($id);
+        try {
+            $categoria = new CategoriaResource(Categoria::findOrFail($id));
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $categoria,
+            'error'  => false
+        ], 200);
     }
 
     public function cria(Request $request, CategoriaRepository $categoriaRepository): JsonResponse

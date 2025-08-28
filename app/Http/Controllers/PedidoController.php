@@ -2,28 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PedidoProdutoResource;
+use App\Models\Pedido;
+use App\Repositories\PedidoRepository;
 use App\Http\Resources\PedidoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\PedidoRepository;
-use App\Models\Pedido;
 
 final class PedidoController extends Controller
 {
-    public function lista(PedidoRepository $pedidoRepository): JsonResponse
+    public function lista(): JsonResponse
     {
-        $result = $pedidoRepository->lista();
+        try {
+            $pedido = PedidoResource::collection(Pedido::all());
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar pedidos: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $pedido,
+            'error'  => false
+        ], 200);
     }
 
-    public function listaId(PedidoRepository $pedidoRepository, int $id): JsonResponse
+    public function listaId(int $id): JsonResponse
     {
-        // $result = $pedidoRepository->listaId($id);
         try {
             $pedido = new PedidoResource(Pedido::findOrFail($id));
         } catch (\Exception $e) {
@@ -41,44 +49,31 @@ final class PedidoController extends Controller
         ], 200);
     }
 
-    public function listaComanda(PedidoRepository $pedidoRepository, int $comanda): JsonResponse
+    public function listaComanda(int $comanda): JsonResponse
     {
-        $result = $pedidoRepository->listaComanda($comanda);
+        try {
+            $pedidoProdutoCollection = PedidoProdutoResource::collection(
+                Pedido::where('comanda', $comanda)->get()
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'msg'    => 'Erro ao buscar produtos do pedido: '.$e->getMessage(),
+                'result' => null,
+                'error'  => true
+            ], 400);
+        }
 
-//        foreach ($result['result'] as $pedido) {
-//            $pedidos[] = Pedido::fromArray($pedido);
-//        }
-
-        // exemplo retorno
-        // {
-        //     comanda: number
-        //     total: number
-        //     pedidos: [
-        //         {
-        //             id_pedido: number
-        //             data_pedido: string
-        //             status_pedido
-        //             produto: {
-        //                 id: number,
-        //                 name: string,
-        //                 preco: number,
-        //                 observacao: string,
-        //                 quantidade: number,
-        //                 isGlutenFree: boolean,
-        //                 isVegan: boolean,
-        //                 description: string,
-        //                 image: Base64
-        //             }
-        //         },
-        //         { ... }
-        //     ]
-        // }
+        $comanda = [
+            'comanda'     => $comanda,
+            'preco_total' => $pedidoProdutoCollection->sum('produto.preco'),
+            'pedidos'     => $pedidoProdutoCollection
+        ];
 
         return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+            'msg'    => null,
+            'result' => $comanda,
+            'error'  => false
+        ], 200);
     }
 
     public function cria(Request $request, PedidoRepository $pedidoRepository): JsonResponse
