@@ -8,44 +8,36 @@ use App\Http\Resources\ProdutoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class ProdutoController extends Controller
+class ProdutoController extends ApiController
 {
+    /**
+     * Retorna todos os produtos
+     */
     public function lista(): JsonResponse
     {
         try {
             $produto = ProdutoResource::collection(Produto::all());
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar categoria: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $produto,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $produto);
     }
 
+    /**
+     * Retorna um produto pelo ID
+     */
     public function listaId(int $id): JsonResponse
     {
         try {
             $produto = new ProdutoResource(Produto::findOrFail($id));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return $this->notFound('Produto não encontrado');
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar produto: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $produto,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $produto);
     }
 
     public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse

@@ -8,44 +8,36 @@ use App\Http\Resources\CategoriaResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-final class CategoriaController extends Controller
+final class CategoriaController extends ApiController
 {
+    /**
+     * Retorna todas as categorias
+     */
     public function lista(): JsonResponse
     {
         try {
             $categoria = CategoriaResource::collection(Categoria::all());
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar categoria: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $categoria,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $categoria);
     }
 
+    /**
+     * Retorna uma categoria pelo ID
+     */
     public function listaId(int $id): JsonResponse
     {
         try {
             $categoria = new CategoriaResource(Categoria::findOrFail($id));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return $this->notFound('Categoria não encontrada');
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar categoria: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar categoria: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $categoria,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $categoria);
     }
 
     public function cria(Request $request, CategoriaRepository $categoriaRepository): JsonResponse

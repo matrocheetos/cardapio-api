@@ -2,53 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PedidoProdutoResource;
 use App\Models\Pedido;
 use App\Repositories\PedidoRepository;
 use App\Http\Resources\PedidoResource;
+use App\Http\Resources\PedidoProdutoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-final class PedidoController extends Controller
+final class PedidoController extends ApiController
 {
+    /**
+     * Retorna todos os pedidos
+     */
     public function lista(): JsonResponse
     {
         try {
             $pedido = PedidoResource::collection(Pedido::all());
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar pedidos: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar pedidos: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $pedido,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $pedido);
     }
 
+    /**
+     * Retorna um pedido pelo ID
+     */
     public function listaId(int $id): JsonResponse
     {
         try {
             $pedido = new PedidoResource(Pedido::findOrFail($id));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return $this->notFound('Pedido não encontrado');
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar pedido: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar pedido: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $pedido,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $pedido);
     }
 
+    /**
+     * Retorna todos os pedidos e produtos de uma comanda
+     */
     public function listaComanda(int $comanda): JsonResponse
     {
         try {
@@ -56,11 +51,11 @@ final class PedidoController extends Controller
                 Pedido::where('comanda', $comanda)->get()
             );
         } catch (\Exception $e) {
-            return response()->json([
-                'msg'    => 'Erro ao buscar produtos do pedido: '.$e->getMessage(),
-                'result' => null,
-                'error'  => true
-            ], 400);
+            return $this->error('Erro ao buscar comanda: '.$e->getMessage());
+        }
+
+        if ($pedidoProdutoCollection->isEmpty()) {
+            return $this->notFound('Comanda não encontrada');
         }
 
         $comanda = [
@@ -69,11 +64,7 @@ final class PedidoController extends Controller
             'pedidos'     => $pedidoProdutoCollection
         ];
 
-        return response()->json([
-            'msg'    => null,
-            'result' => $comanda,
-            'error'  => false
-        ], 200);
+        return $this->success(null, $comanda);
     }
 
     public function cria(Request $request, PedidoRepository $pedidoRepository): JsonResponse
