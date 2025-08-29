@@ -11,6 +11,7 @@ class Pedido extends Model
 
     protected $table = 'pedido';
     protected $primaryKey = 'id_pedido';
+    protected $fillable = ['comanda', 'id_produto', 'observacao'];
     public $timestamps = true;
 
     const CREATED_AT = 'data_pedido';

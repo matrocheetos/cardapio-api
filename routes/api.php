@@ -13,17 +13,17 @@ Route::middleware(['api'])->group(function () {
             Route::get('/', 'lista');
             Route::get('/{id}', 'listaId');
 
-            Route::middleware('auth:sanctum')->group(function () {
+            // Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/cria', 'cria');
                 Route::put('/edita/{id}', 'edita');
                 Route::delete('/deleta/{id}', 'deleta');
-            });
+            // });
         });
 
         Route::controller(MesaController::class)->prefix('mesa')->group(function () {
             Route::get('/', 'lista');
             Route::get('/{id}', 'listaId');
-            Route::get('/mesa/{nro_mesa}', 'listaNroMesa');
+            Route::get('/numero/{nro_mesa}', 'listaNroMesa');
             Route::post('/cria', 'cria');
             Route::put('/edita/{id}', 'edita');
             Route::delete('/deleta/{id}', 'deleta');
@@ -42,11 +42,11 @@ Route::middleware(['api'])->group(function () {
             Route::get('/', 'lista');
             Route::get('/{id}', 'listaId');
 
-            Route::middleware('auth:sanctum')->group(function () {
+            // Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/cria', 'cria');
                 Route::put('/edita/{id}', 'edita');
                 Route::delete('/deleta/{id}', 'deleta');
-            });
+            // });
         });
 
     });

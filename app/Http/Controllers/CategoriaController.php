@@ -40,45 +40,59 @@ final class CategoriaController extends ApiController
         return $this->success(null, $categoria);
     }
 
-    public function cria(Request $request, CategoriaRepository $categoriaRepository): JsonResponse
+    /**
+     * Cria uma nova categoria
+     */
+    public function cria(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $categoria = Categoria::fromArray($data);
+        $data = json_decode($request->getContent());
 
-        $result = $categoriaRepository->cria($categoria);
+        try {
+            $categoria = Categoria::create([
+                'descricao' => $data->descricao
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Erro ao criar categoria: '.$e->getMessage());
+        }
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $categoria);
     }
 
-    public function edita(Request $request, CategoriaRepository $categoriaRepository, int $id): JsonResponse
+    /**
+     * Edita uma categoria
+     */
+    public function edita(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $categoria = Categoria::fromArray($data, $id);
+        
+        try {
+            $categoria = Categoria::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Categoria não encontrada');
+        }
 
-        $result = $categoriaRepository->edita($categoria);
+        $categoria->fill($data);
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        if ($categoria->isDirty()) {
+            $categoria->save();
+        }
+
+        return $this->success(null, $categoria);
     }
 
-    public function deleta(CategoriaRepository $categoriaRepository, int $id): JsonResponse
+    /**
+     * Deleta uma categoria
+     */
+    public function deleta(int $id): JsonResponse
     {
-        $categoria = new Categoria();
-        $categoria->setIdCategoria($id);
+        try {
+            $categoria = Categoria::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Categoria não encontrada');
+        }
 
-        $result = $categoriaRepository->deleta($categoria);
+        $categoria->delete();
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success('Categoria deletada com sucesso', null);
     }
 }

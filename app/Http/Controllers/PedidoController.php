@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
-use App\Repositories\PedidoRepository;
 use App\Http\Resources\PedidoResource;
 use App\Http\Resources\PedidoProdutoResource;
 use Illuminate\Http\Request;
@@ -67,62 +66,61 @@ final class PedidoController extends ApiController
         return $this->success(null, $comanda);
     }
 
-    public function cria(Request $request, PedidoRepository $pedidoRepository): JsonResponse
+    /**
+     * Cria um novo pedido
+     */
+    public function cria(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        if (!isset($data['pedido'])) {
-            return response()->json([
-                'msg'    => 'Pedido não informado',
-                'result' => null,
-                'error' => true
-            ], 400);
-        }
-        foreach ($data['pedido'] as $p) {
-            $pedido = Pedido::fromArray($p);
-            $result = $pedidoRepository->cria($pedido);
-            
-            if($result['status'] === 400) {
-                return response()->json([
-                    'msg'    => $result['msg'],
-                    'result' => $result['result'],
-                    'error'  => $result['error']
-                ], $result['status']);
-            }
+        $data = json_decode($request->getContent());
+
+        try {
+            $pedido = Pedido::create([
+                'comanda'       => $data->comanda,
+                'id_produto'    => $data->id_produto,
+                'observacao'    => $data->observacao ?? null
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Erro ao criar pedido: '.$e->getMessage());
         }
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $pedido);
     }
 
-    public function edita(Request $request, PedidoRepository $pedidoRepository, int $id): JsonResponse
+    /**
+     * Edita um pedido
+     */
+    public function edita(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $pedido = new Pedido();
-        $pedido->fromArray($data, $id);
+        
+        try {
+            $pedido = Pedido::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Pedido não encontrado');
+        }
 
-        $result = $pedidoRepository->edita($pedido);
+        $pedido->fill($data);
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        if ($pedido->isDirty()) {
+            $pedido->save();
+        }
+
+        return $this->success(null, $pedido);
     }
 
-    public function deleta(PedidoRepository $pedidoRepository, int $id): JsonResponse
+    /**
+     * Deleta um pedido
+     */
+    public function deleta(int $id): JsonResponse
     {
-        $pedido = new Pedido();
-        $pedido->setIdPedido($id);
+        try {
+            $pedido = Pedido::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Pedido não encontrado');
+        }
 
-        $result = $pedidoRepository->deleta($pedido);
+        $pedido->delete();
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success('Pedido deletado com sucesso', null);
     }
 }

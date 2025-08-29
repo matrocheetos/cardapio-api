@@ -11,6 +11,7 @@ class Mesa extends Model
 
     protected $table = 'mesa';
     protected $primaryKey = 'comanda';
+    protected $fillable = ['nro_mesa', 'status_pagamento'];
     public $timestamps = true;
 
     public function pedido()

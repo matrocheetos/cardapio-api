@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
-use App\Repositories\ProdutoRepository;
 use App\Http\Resources\ProdutoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class ProdutoController extends ApiController
+final class ProdutoController extends ApiController
 {
     /**
      * Retorna todos os produtos
@@ -40,45 +39,67 @@ class ProdutoController extends ApiController
         return $this->success(null, $produto);
     }
 
-    public function cria(Request $request, ProdutoRepository $produtoRepository): JsonResponse
+    /**
+     * Cria um novo produto
+     */
+    public function cria(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $produto = Produto::fromArray($data);
+        $data = json_decode($request->getContent());
 
-        $result = $produtoRepository->cria($produto);
+        try {
+            $produto = Produto::create([
+                'id_categoria' => $data->id_categoria,
+                'nome'         => $data->nome,
+                'descricao'    => $data->descricao,
+                'imagem'       => $data->imagem,
+                'preco'        => (float) $data->preco,
+                'eh_vegano'    => (bool) $data->eh_vegano,
+                'eh_sem_gluten'=> (bool) $data->eh_sem_gluten,
+                'em_estoque'   => true,
+                'porcoes'      => (int) $data->porcoes
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Erro ao criar produto: '.$e->getMessage());
+        }
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $produto);
     }
 
-    public function edita(Request $request, ProdutoRepository $produtoRepository, int $id): JsonResponse
+    /**
+     * Edita um produto
+     */
+    public function edita(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $produto = Produto::fromArray($data, $id);
+        
+        try {
+            $produto = Produto::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Produto não encontrado');
+        }
 
-        $result = $produtoRepository->edita($produto);
+        $produto->fill($data);
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        if ($produto->isDirty()) {
+            $produto->save();
+        }
+
+        return $this->success(null, $produto);
     }
 
-    public function deleta(ProdutoRepository $produtoRepository, int $id): JsonResponse
+    /**
+     * Deleta um produto
+     */
+    public function deleta(int $id): JsonResponse
     {
-        $produto = new Produto();
-        $produto->setIdProduto($id);
+        try {
+            $produto = Produto::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Produto não encontrado');
+        }
 
-        $result = $produtoRepository->deleta($produto);
+        $produto->delete();
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $produto);
     }
 }

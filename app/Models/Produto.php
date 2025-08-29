@@ -11,6 +11,7 @@ class Produto extends Model
 
     protected $table = 'produto';
     protected $primaryKey = 'id_produto';
+    protected $fillable = ['id_categoria', 'nome', 'descricao', 'imagem', 'preco', 'preco_desconto', 'eh_vegano', 'eh_sem_gluten', 'em_estoque', 'porcoes'];
     public $timestamps = false;
 
     public function categoria()

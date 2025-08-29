@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mesa;
-use App\Repositories\MesaRepository;
 use App\Http\Resources\MesaResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -60,45 +59,59 @@ final class MesaController extends ApiController
         return $this->success(null, $mesa);
     }
 
-    public function cria(Request $request, MesaRepository $mesaRepository): JsonResponse
+    /**
+     * Cria uma nova comanda para uma mesa
+     */
+    public function cria(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $produto = Mesa::fromArray($data);
+        $data = json_decode($request->getContent());
 
-        $result = $mesaRepository->cria($produto);
+        try {
+            $mesa = Mesa::create([
+                'nro_mesa' => $data->nro_mesa
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Erro ao criar mesa: '.$e->getMessage());
+        }
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $mesa);
     }
 
-    public function edita(Request $request, MesaRepository $mesaRepository): JsonResponse
+    /**
+     * Edita uma comanda
+     */
+    public function edita(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $mesa = Mesa::fromArray($data);
+        
+        try {
+            $mesa = Mesa::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Mesa não encontrada');
+        }
 
-        $result = $mesaRepository->edita($mesa);
+        $mesa->fill($data);
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        if ($mesa->isDirty()) {
+            $mesa->save();
+        }
+
+        return $this->success(null, $mesa);
     }
 
-    public function deleta(MesaRepository $mesaRepository, int $id): JsonResponse
+    /**
+     * Deleta uma comanda
+     */
+    public function deleta(int $id): JsonResponse
     {
-        $mesa = new Mesa();
-        $mesa->setComanda($id);
+        try {
+            $mesa = Mesa::findOrFail($id);
+        } catch (\Exception $e) {
+            return $this->notFound('Mesa não encontrada');
+        }
 
-        $result = $mesaRepository->deleta($mesa);
+        $mesa->delete();
 
-        return response()->json([
-            'msg'    => $result['msg'],
-            'result' => $result['result'],
-            'error'  => $result['error']
-        ], $result['status']);
+        return $this->success(null, $mesa);
     }
 }
