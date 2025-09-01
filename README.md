@@ -22,4 +22,4 @@ Github Actions, commit na branch `main`
 
 - http://localhost:8001/docs/api
 
-- https://pratofacil.dynv6.net/docs/api
+- https://api.pratofacil.qzz.io/docs/api

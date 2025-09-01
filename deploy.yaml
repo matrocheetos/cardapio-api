@@ -6,7 +6,7 @@ config:
   ssh_multiplexing: false
 
 hosts:
-  pratofacil.dynv6.net:
+  pratofacil:
     provision_user: ubuntu
     remote_user: deployer
     deploy_path: '~/cardapio-api'
