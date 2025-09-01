@@ -22,20 +22,16 @@ class MesaCriaRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'nro_mesa'         => 'required|integer|min:1|unique:mesa,nro_mesa',
-            'status_pagamento' => 'nullable|string|in:' . implode(',', StatusPagamentoEnum::values())
+            'nro_mesa' => 'required|integer|min:1'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'nro_mesa.required'       => 'O número da mesa é obrigatório.',
-            'nro_mesa.integer'        => 'O número da mesa deve ser um número inteiro.',
-            'nro_mesa.min'            => 'O número da mesa deve ser maior que zero.',
-            'nro_mesa.unique'         => 'Já existe uma mesa com este número.',
-            'status_pagamento.string' => 'O status de pagamento deve ser um texto.',
-            'status_pagamento.in'     => 'Status de pagamento inválido. Valores permitidos: ' . implode(', ', StatusPagamentoEnum::values())
+            'nro_mesa.required' => 'O número da mesa é obrigatório.',
+            'nro_mesa.integer'  => 'O número da mesa deve ser um número inteiro.',
+            'nro_mesa.min'      => 'O número da mesa deve ser maior que zero.'
         ];
     }
 }

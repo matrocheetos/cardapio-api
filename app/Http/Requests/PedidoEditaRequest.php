@@ -25,7 +25,7 @@ class PedidoEditaRequest extends ApiRequest
             'comanda'       => 'required|integer|exists:mesa,comanda',
             'id_produto'    => 'required|integer|exists:produto,id_produto',
             'observacao'    => 'nullable|string|max:255',
-            'status_pedido' => 'nullable|string|in:' . implode(',', StatusPedidoEnum::values())
+            'status_pedido' => 'required|string|in:' . implode(',', StatusPedidoEnum::values())
         ];
     }
 

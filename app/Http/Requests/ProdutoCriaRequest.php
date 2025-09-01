@@ -27,7 +27,7 @@ class ProdutoCriaRequest extends ApiRequest
             'preco_desconto' => 'nullable|numeric|min:0|decimal:0,2',
             'eh_vegano'      => 'required|boolean',
             'eh_sem_gluten'  => 'required|boolean',
-            'em_estoque'     => 'nullable|boolean',
+            'em_estoque'     => 'required|boolean',
             'porcoes'        => 'required|integer|min:1',
             'id_categoria'   => 'required|integer|exists:categoria,id_categoria'
         ];
@@ -52,6 +52,8 @@ class ProdutoCriaRequest extends ApiRequest
             'eh_vegano.boolean'       => 'O campo vegano deve ser verdadeiro ou falso',
             'eh_sem_gluten.required'  => 'Informe se o produto não contém glúten',
             'eh_sem_gluten.boolean'   => 'O campo sem glúten deve ser verdadeiro ou falso',
+            'em_estoque.required'     => 'Informe se o produto está em estoque',
+            'em_estoque.boolean'      => 'O campo em estoque deve ser verdadeiro ou falso',
             'porcoes.required'        => 'O número de porções é obrigatório',
             'porcoes.integer'         => 'O número de porções deve ser um inteiro',
             'porcoes.min'             => 'Deve ter pelo menos 1 porção',
