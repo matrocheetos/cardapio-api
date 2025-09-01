@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Repositories\CategoriaRepository;
+use App\Http\Requests\CategoriaCriaRequest;
+use App\Http\Requests\CategoriaEditaRequest;
 use App\Http\Resources\CategoriaResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 final class CategoriaController extends ApiController
@@ -43,14 +43,12 @@ final class CategoriaController extends ApiController
     /**
      * Cria uma nova categoria
      */
-    public function cria(Request $request): JsonResponse
+    public function cria(CategoriaCriaRequest $request): JsonResponse
     {
-        $data = json_decode($request->getContent());
+        $data = $request->validated();
 
         try {
-            $categoria = Categoria::create([
-                'descricao' => $data->descricao
-            ]);
+            $categoria = Categoria::create($data);
         } catch (\Exception $e) {
             return $this->error('Erro ao criar categoria: '.$e->getMessage());
         }
@@ -61,10 +59,10 @@ final class CategoriaController extends ApiController
     /**
      * Edita uma categoria
      */
-    public function edita(Request $request, int $id): JsonResponse
+    public function edita(CategoriaEditaRequest $request, int $id): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        
+        $data = $request->validated();
+
         try {
             $categoria = Categoria::findOrFail($id);
         } catch (\Exception $e) {

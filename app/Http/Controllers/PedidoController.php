@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
+use App\Http\Requests\PedidoCriaRequest;
+use App\Http\Requests\PedidoEditaRequest;
 use App\Http\Resources\PedidoResource;
 use App\Http\Resources\PedidoProdutoResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 final class PedidoController extends ApiController
@@ -69,16 +70,12 @@ final class PedidoController extends ApiController
     /**
      * Cria um novo pedido
      */
-    public function cria(Request $request): JsonResponse
+    public function cria(PedidoCriaRequest $request): JsonResponse
     {
-        $data = json_decode($request->getContent());
+        $data = $request->validated();
 
         try {
-            $pedido = Pedido::create([
-                'comanda'       => $data->comanda,
-                'id_produto'    => $data->id_produto,
-                'observacao'    => $data->observacao ?? null
-            ]);
+            $pedido = Pedido::create($data);
         } catch (\Exception $e) {
             return $this->error('Erro ao criar pedido: '.$e->getMessage());
         }
@@ -89,10 +86,10 @@ final class PedidoController extends ApiController
     /**
      * Edita um pedido
      */
-    public function edita(Request $request, int $id): JsonResponse
+    public function edita(PedidoEditaRequest $request, int $id): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        
+        $data = $request->validated();
+
         try {
             $pedido = Pedido::findOrFail($id);
         } catch (\Exception $e) {

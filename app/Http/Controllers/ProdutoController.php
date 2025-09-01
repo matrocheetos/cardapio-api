@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
+use App\Http\Requests\ProdutoCriaRequest;
+use App\Http\Requests\ProdutoEditaRequest;
 use App\Http\Resources\ProdutoResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 final class ProdutoController extends ApiController
@@ -42,22 +43,12 @@ final class ProdutoController extends ApiController
     /**
      * Cria um novo produto
      */
-    public function cria(Request $request): JsonResponse
+    public function cria(ProdutoCriaRequest $request): JsonResponse
     {
-        $data = json_decode($request->getContent());
+        $data = $request->validated();
 
         try {
-            $produto = Produto::create([
-                'id_categoria' => $data->id_categoria,
-                'nome'         => $data->nome,
-                'descricao'    => $data->descricao,
-                'imagem'       => $data->imagem,
-                'preco'        => (float) $data->preco,
-                'eh_vegano'    => (bool) $data->eh_vegano,
-                'eh_sem_gluten'=> (bool) $data->eh_sem_gluten,
-                'em_estoque'   => true,
-                'porcoes'      => (int) $data->porcoes
-            ]);
+            $produto = Produto::create($data);
         } catch (\Exception $e) {
             return $this->error('Erro ao criar produto: '.$e->getMessage());
         }
@@ -68,10 +59,10 @@ final class ProdutoController extends ApiController
     /**
      * Edita um produto
      */
-    public function edita(Request $request, int $id): JsonResponse
+    public function edita(ProdutoEditaRequest $request, int $id): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        
+        $data = $request->validated();
+
         try {
             $produto = Produto::findOrFail($id);
         } catch (\Exception $e) {

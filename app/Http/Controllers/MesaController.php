@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mesa;
+use App\Http\Requests\MesaCriaRequest;
+use App\Http\Requests\MesaEditaRequest;
 use App\Http\Resources\MesaResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 final class MesaController extends ApiController
@@ -62,14 +63,12 @@ final class MesaController extends ApiController
     /**
      * Cria uma nova comanda para uma mesa
      */
-    public function cria(Request $request): JsonResponse
+    public function cria(MesaCriaRequest $request): JsonResponse
     {
-        $data = json_decode($request->getContent());
+        $data = $request->validated();
 
         try {
-            $mesa = Mesa::create([
-                'nro_mesa' => $data->nro_mesa
-            ]);
+            $mesa = Mesa::create($data);
         } catch (\Exception $e) {
             return $this->error('Erro ao criar mesa: '.$e->getMessage());
         }
@@ -80,10 +79,10 @@ final class MesaController extends ApiController
     /**
      * Edita uma comanda
      */
-    public function edita(Request $request, int $id): JsonResponse
+    public function edita(MesaEditaRequest $request, int $id): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        
+        $data = $request->validated();
+
         try {
             $mesa = Mesa::findOrFail($id);
         } catch (\Exception $e) {
