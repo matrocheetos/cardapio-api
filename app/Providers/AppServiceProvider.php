@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,9 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if ($this->app->environment('local') && class_exists(TelescopeServiceProvider::class)) {
-            $this->app->register(TelescopeServiceProvider::class);
-        }
+        //
     }
 
     /**
@@ -25,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
         // Gate::define('viewApiDocs', function (User $user) {
         //     return in_array($user->email, ['admin@app.com']);
         // });
+        Gate::define('viewApiDocs', function (?User $user = null) {
+            return true;
+        });
     }
 }
