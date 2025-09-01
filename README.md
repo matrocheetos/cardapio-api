@@ -1,31 +1,25 @@
 # API para Cardápio Virtual
 
-## Desenvolvimento local (Docker)
-
-Iniciar container e serviços (aplicação, FrankenPHP e MySQL)
-
-```
-./start.bat
-```
-
 ## Desenvolvimento local (Laravel)
+
+Banco MySQL:
+
+```sh
+mysqld --console
+```
 
 Iniciar servidor de desenvolvimento:
 
-```
+```sh
 php artisan serve --port=8001
 ```
 
 # Deploy
 
-Github Actions, commit na `main` branch
+Github Actions, commit na branch `main`
 
 ## Documentação:
 
-```
-php artisan scribe:generate
-```
+- http://localhost:8001/docs/api
 
-- http://localhost:8001/docs
-
-- https://pratofacil.dynv6.net/docs
+- https://pratofacil.dynv6.net/docs/api
