@@ -21,6 +21,14 @@ jobs:
       - name: Install dependencies
         run: composer install --no-dev --optimize-autoloader
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+          echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/config
+          chmod 644 ~/.ssh/known_hosts
+
       - name: Deploy
         uses: deployphp/action@v1
         with:
