@@ -1,35 +1,25 @@
 # API para Cardápio Virtual
 
-## Desenvolvimento local (Docker)
+## Desenvolvimento local (Laravel)
 
-Iniciar container e serviços (aplicação, nginx e MySQL)
+Banco MySQL:
 
+```sh
+mysqld --console
 ```
-chmod +x setup.sh
-./setup.sh
-```
-
-## Desenvolvimento local (Symfony)
 
 Iniciar servidor de desenvolvimento:
 
-```
-symfony server:start --no-tls --port=8000 -d
-```
-
-Parar servidor de desenvolvimento:
-```
-symfony server:stop
+```sh
+php artisan serve --port=8001
 ```
 
 # Deploy
 
-```
-dep deploy
-```
+Github Actions, commit na branch `main`
 
 ## Documentação:
 
-```
-https://pratofacil.dynv6.net/swagger/index.html
-```
+- http://localhost:8001/docs/api
+
+- https://pratofacil.dynv6.net/docs/api
