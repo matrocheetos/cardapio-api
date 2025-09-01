@@ -23,6 +23,7 @@ return [
         'http://cardapio-api.test',
         'http://localhost:8000',
         'https://localhost:8001',
+        'https://pratofacil.dynv6.net',
         'https://pf-novo-front.vercel.app',
     ],
 
