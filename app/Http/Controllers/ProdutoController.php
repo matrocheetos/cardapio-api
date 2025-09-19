@@ -6,10 +6,13 @@ use App\Models\Produto;
 use App\Http\Requests\ProdutoCriaRequest;
 use App\Http\Requests\ProdutoEditaRequest;
 use App\Http\Resources\ProdutoResource;
+use App\Services\R2StorageService;
 use Illuminate\Http\JsonResponse;
 
 final class ProdutoController extends ApiController
 {
+    public function __construct(private readonly R2StorageService $storageService) {}
+
     /**
      * Retorna todos os produtos
      */
@@ -46,6 +49,13 @@ final class ProdutoController extends ApiController
     public function cria(ProdutoCriaRequest $request): JsonResponse
     {
         $data = $request->validated();
+
+        if ($request->hasFile('imagem')) {
+            $restaurante = 'dev';
+            $data['imagem'] = $this->storageService->upload(
+                $request->file('imagem'), $restaurante.'/produtos'
+            );
+        }
 
         try {
             $produto = Produto::create($data);

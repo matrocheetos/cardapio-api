@@ -22,7 +22,7 @@ class ProdutoCriaRequest extends ApiRequest
         return [
             'nome'           => 'required|string|max:255',
             'descricao'      => 'required|string|max:255',
-            'imagem'         => 'nullable|url|max:255',
+            'imagem'         => 'nullable|image|max:255',
             'preco'          => 'required|numeric|min:0|decimal:0,2',
             'preco_desconto' => 'nullable|numeric|min:0|decimal:0,2',
             'eh_vegano'      => 'required|boolean',
