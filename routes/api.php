@@ -8,7 +8,7 @@ use App\Http\Controllers\ProdutoController;
 
 Route::middleware(['api'])->group(function () {
     Route::prefix('cardapio')->group(function() {
-    
+
         Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
             Route::get('/', 'lista');
             Route::get('/{id}', 'listaId');
@@ -44,7 +44,7 @@ Route::middleware(['api'])->group(function () {
 
             // Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/cria', 'cria');
-                Route::put('/edita/{id}', 'edita');
+                Route::post('/edita/{id}', 'edita');
                 Route::delete('/deleta/{id}', 'deleta');
             // });
         });

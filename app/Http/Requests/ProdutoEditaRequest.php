@@ -22,7 +22,7 @@ class ProdutoEditaRequest extends ApiRequest
         return [
             'nome'           => 'required|string|max:255',
             'descricao'      => 'required|string|max:255',
-            'imagem'         => 'nullable|url|max:255',
+            'imagem'         => 'nullable|image|max:4000',
             'preco'          => 'required|numeric|min:0|decimal:0,2',
             'preco_desconto' => 'nullable|numeric|min:0|decimal:0,2',
             'eh_vegano'      => 'required|boolean',
@@ -40,7 +40,7 @@ class ProdutoEditaRequest extends ApiRequest
             'nome.max'                => 'O nome deve ter no máximo 255 caracteres',
             'descricao.required'      => 'A descrição é obrigatória',
             'descricao.max'           => 'A descrição deve ter no máximo 255 caracteres',
-            'imagem.url'              => 'Informe uma URL válida para a imagem',
+            'imagem.image'            => 'Informe uma imagem válida',
             'preco.required'          => 'O preço é obrigatório',
             'preco.numeric'           => 'O preço deve ser numérico',
             'preco.min'               => 'O preço deve ser maior que zero',

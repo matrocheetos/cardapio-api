@@ -6,10 +6,14 @@ use App\Models\Produto;
 use App\Http\Requests\ProdutoCriaRequest;
 use App\Http\Requests\ProdutoEditaRequest;
 use App\Http\Resources\ProdutoResource;
+use App\Services\R2StorageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 final class ProdutoController extends ApiController
 {
+    public function __construct(private readonly R2StorageService $storageService) {}
+
     /**
      * Retorna todos os produtos
      */
@@ -47,6 +51,13 @@ final class ProdutoController extends ApiController
     {
         $data = $request->validated();
 
+        if ($request->hasFile('imagem')) {
+            $restaurante = 'dev';
+            $data['imagem'] = $this->storageService->upload(
+                $request->file('imagem'), Str::uuid(), $restaurante.'/produtos', 'public'
+            );
+        }
+
         try {
             $produto = Produto::create($data);
         } catch (\Exception $e) {
@@ -69,6 +80,17 @@ final class ProdutoController extends ApiController
             return $this->notFound('Produto não encontrado');
         }
 
+        if ($request->hasFile('imagem')) {
+            $path     = $produto->getOriginal('imagem');
+            $basePath = dirname($path);
+
+            $this->storageService->delete($path);
+
+            $data['imagem'] = $this->storageService->upload(
+                $request->file('imagem'), Str::uuid(), $basePath, 'public'
+            );
+        }
+
         $produto->fill($data);
 
         if ($produto->isDirty()) {
@@ -89,8 +111,11 @@ final class ProdutoController extends ApiController
             return $this->notFound('Produto não encontrado');
         }
 
+        $path = $produto->getOriginal('imagem');
+
+        $this->storageService->delete($path);
         $produto->delete();
 
-        return $this->success(null, $produto);
+        return $this->success('Produto deletado com sucesso', null);
     }
 }
