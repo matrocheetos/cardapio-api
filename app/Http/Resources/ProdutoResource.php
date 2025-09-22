@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\R2StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,12 +15,14 @@ class ProdutoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $storageService = app(R2StorageService::class);
+        
         return [
             'id_produto'     => $this->id_produto,
             'id_categoria'   => $this->categoria->id_categoria,
             'nome'           => $this->nome,
             'descricao'      => $this->descricao,
-            'imagem'         => $this->imagem,
+            'imagem'         => $this->imagem ? $storageService->getUrl($this->imagem) : null,
             'preco'          => $this->preco,
             'preco_desconto' => $this->preco_desconto,
             'eh_vegano'      => $this->eh_vegano,

@@ -8,6 +8,7 @@ use App\Http\Requests\ProdutoEditaRequest;
 use App\Http\Resources\ProdutoResource;
 use App\Services\R2StorageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 final class ProdutoController extends ApiController
 {
@@ -53,7 +54,7 @@ final class ProdutoController extends ApiController
         if ($request->hasFile('imagem')) {
             $restaurante = 'dev';
             $data['imagem'] = $this->storageService->upload(
-                $request->file('imagem'), $restaurante.'/produtos'
+                $request->file('imagem'), Str::uuid(), $restaurante.'/produtos', 'public'
             );
         }
 
@@ -77,6 +78,16 @@ final class ProdutoController extends ApiController
             $produto = Produto::findOrFail($id);
         } catch (\Exception $e) {
             return $this->notFound('Produto não encontrado');
+        }
+
+        if ($request->hasFile('imagem')) {
+            $path     = $produto->getOriginal('imagem');
+            $basePath = dirname($path);
+            $filename = pathinfo(basename($path), PATHINFO_FILENAME);
+
+            $data['imagem'] = $this->storageService->upload(
+                $request->file('imagem'), $filename, $basePath, 'public'
+            );
         }
 
         $produto->fill($data);
