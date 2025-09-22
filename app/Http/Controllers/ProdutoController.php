@@ -83,10 +83,11 @@ final class ProdutoController extends ApiController
         if ($request->hasFile('imagem')) {
             $path     = $produto->getOriginal('imagem');
             $basePath = dirname($path);
-            $filename = pathinfo(basename($path), PATHINFO_FILENAME);
+
+            $this->storageService->delete($path);
 
             $data['imagem'] = $this->storageService->upload(
-                $request->file('imagem'), $filename, $basePath, 'public'
+                $request->file('imagem'), Str::uuid(), $basePath, 'public'
             );
         }
 
@@ -110,8 +111,11 @@ final class ProdutoController extends ApiController
             return $this->notFound('Produto não encontrado');
         }
 
+        $path = $produto->getOriginal('imagem');
+
+        $this->storageService->delete($path);
         $produto->delete();
 
-        return $this->success(null, $produto);
+        return $this->success('Produto deletado com sucesso', null);
     }
 }

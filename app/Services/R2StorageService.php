@@ -43,10 +43,12 @@ final class R2StorageService
      */
     public function getUrl(string $path): ?string
     {
-        if (Storage::exists($path)) {
-            return Storage::url($path);
-        }
-        return null;
+        // if (Storage::exists($path)) {
+        //     return Storage::url($path);
+        // }
+        // return null;
+
+        return 'https://content.pratofacil.qzz.io/'.$path;
     }
 
     /**
