@@ -1,6 +1,6 @@
 # API para Cardápio Virtual
 
-## Desenvolvimento local (Laravel)
+## Desenvolvimento local
 
 Banco MySQL:
 
@@ -11,7 +11,7 @@ mysqld --console
 Iniciar servidor de desenvolvimento:
 
 ```sh
-php artisan serve --port=8001
+php artisan serve --port=8000
 ```
 
 # Deploy
@@ -20,6 +20,6 @@ Github Actions, commit na branch `main`
 
 ## Documentação:
 
-- http://localhost:8001/docs/api
+- http://localhost:8000/docs/api
 
 - https://api.pratofacil.qzz.io/docs/api
