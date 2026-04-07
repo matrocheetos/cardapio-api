@@ -49,7 +49,7 @@ final class FeatureFlagController
         }
 
         try {
-            $flag = FeatureFlag::where('name', $name)->first();
+            $flag = FeatureFlag::where('name', '=', $name)->first();
 
             if (!$flag) {
                 return [

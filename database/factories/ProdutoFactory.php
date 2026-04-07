@@ -29,7 +29,7 @@ class ProdutoFactory extends Factory
             'id_categoria' => Categoria::factory(),
             'nome' => $this->faker->word(),
             'descricao' => $this->faker->sentence(),
-            'imagem' => 'https://cdn-icons-png.flaticon.com/512/9003/9003976.png',
+            'imagem' => 'exemplo.png',
             'preco' => $this->faker->randomFloat(2, 10, 100),
             'eh_vegano' => $this->faker->boolean(),
             'eh_sem_gluten' => $this->faker->boolean(),

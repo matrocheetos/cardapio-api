@@ -16,6 +16,7 @@ final class ProdutoController extends ApiController
 
     /**
      * Retorna todos os produtos
+     * @unauthenticated
      */
     public function lista(): JsonResponse
     {
@@ -30,6 +31,7 @@ final class ProdutoController extends ApiController
 
     /**
      * Retorna um produto pelo ID
+     * @unauthenticated
      */
     public function listaId(int $id): JsonResponse
     {

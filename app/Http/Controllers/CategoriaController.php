@@ -12,6 +12,7 @@ final class CategoriaController extends ApiController
 {
     /**
      * Retorna todas as categorias
+     * @unauthenticated
      */
     public function lista(): JsonResponse
     {
@@ -26,6 +27,7 @@ final class CategoriaController extends ApiController
 
     /**
      * Retorna uma categoria pelo ID
+     * @unauthenticated
      */
     public function listaId(int $id): JsonResponse
     {
