@@ -27,10 +27,10 @@ final class MesaController extends ApiController
     /**
      * Retorna uma mesa pelo número da comanda
      */
-    public function listaId(int $comanda): JsonResponse
+    public function listaId(string|int $comanda): JsonResponse
     {
         try {
-            $mesa = new MesaResource(Mesa::findOrFail($comanda));
+            $mesa = new MesaResource(Mesa::findOrFail((int) $comanda));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
             return $this->notFound('Mesa não encontrada');
         } catch (\Exception $e) {
@@ -43,11 +43,11 @@ final class MesaController extends ApiController
     /**
      * Retorna as comandas pelo número da mesa
      */
-    public function listaNroMesa(int $nro_mesa): JsonResponse
+    public function listaNroMesa(string|int $nro_mesa): JsonResponse
     {
         try {
             $mesa = MesaResource::collection(
-                Mesa::where('nro_mesa', '=', $nro_mesa)->get()
+                Mesa::where('nro_mesa', '=', (int) $nro_mesa)->get()
             );
         } catch (\Exception $e) {
             return $this->error('Erro ao buscar mesa '.$nro_mesa.': '.$e->getMessage());
@@ -79,12 +79,12 @@ final class MesaController extends ApiController
     /**
      * Edita uma comanda
      */
-    public function edita(MesaEditaRequest $request, int $id): JsonResponse
+    public function edita(MesaEditaRequest $request, string|int $comanda): JsonResponse
     {
         $data = $request->validated();
 
         try {
-            $mesa = Mesa::findOrFail($id);
+            $mesa = Mesa::findOrFail((int) $comanda);
         } catch (\Exception $e) {
             return $this->notFound('Mesa não encontrada');
         }
@@ -101,10 +101,10 @@ final class MesaController extends ApiController
     /**
      * Deleta uma comanda
      */
-    public function deleta(int $id): JsonResponse
+    public function deleta(string|int $comanda): JsonResponse
     {
         try {
-            $mesa = Mesa::findOrFail($id);
+            $mesa = Mesa::findOrFail((int) $comanda);
         } catch (\Exception $e) {
             return $this->notFound('Mesa não encontrada');
         }

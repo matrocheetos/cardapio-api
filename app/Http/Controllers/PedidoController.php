@@ -13,6 +13,7 @@ final class PedidoController extends ApiController
 {
     /**
      * Retorna todos os pedidos
+     * @unauthenticated
      */
     public function lista(): JsonResponse
     {
@@ -27,6 +28,7 @@ final class PedidoController extends ApiController
 
     /**
      * Retorna um pedido pelo ID
+     * @unauthenticated
      */
     public function listaId(int $id): JsonResponse
     {
@@ -43,12 +45,13 @@ final class PedidoController extends ApiController
 
     /**
      * Retorna todos os pedidos e produtos de uma comanda
+     * @unauthenticated
      */
     public function listaComanda(int $comanda): JsonResponse
     {
         try {
             $pedidoProdutoCollection = PedidoProdutoResource::collection(
-                Pedido::where('comanda', $comanda)->get()
+                Pedido::where('comanda', '=', $comanda)->get()
             );
         } catch (\Exception $e) {
             return $this->error('Erro ao buscar comanda: '.$e->getMessage());
@@ -69,6 +72,7 @@ final class PedidoController extends ApiController
 
     /**
      * Cria um novo pedido
+     * @unauthenticated
      */
     public function cria(PedidoCriaRequest $request): JsonResponse
     {

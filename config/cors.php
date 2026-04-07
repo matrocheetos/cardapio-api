@@ -19,13 +19,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'
-        // 'http://cardapio-api.test',
-        // 'http://localhost:3000',
-        // 'http://localhost:8000',
-        // 'https://localhost:8001',
-        // 'https://api.pratofacil.qzz.io',
-        // 'https://pf-novo-front.vercel.app',
+    'allowed_origins' => [
+        // '*'
+        'http://cardapio-api.test',
+        'http://localhost:8000',
+        'http://localhost:3000',
+        'https://pratofacil.qzz.io',
+        'https://api.pratofacil.qzz.io',
+        'https://pf-novo-front.vercel.app',
     ],
 
     'allowed_origins_patterns' => [],

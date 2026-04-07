@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
         // });
         Gate::define('viewApiDocs', function (?User $user = null) {
             return true;
+        });
+
+        Scramble::configure()->withDocumentTransformers(function (OpenApi $openApi) {
+            $openApi->secure(SecurityScheme::http('bearer'));
         });
     }
 }
