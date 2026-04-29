@@ -1,0 +1,13 @@
+# dependabot monthly updates for composer dependencies
+
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    allow:
+      - dependency-type: "production"
+        update-types:
+          - "version-update:semver-patch"
+          - "version-update:semver-minor"
