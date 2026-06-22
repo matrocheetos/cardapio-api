@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: "8.5"
 
       - name: Install dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install
 
       - name: Setup SSH
         run: |
@@ -33,7 +33,7 @@ jobs:
         uses: deployphp/action@v1
         with:
           dep: deploy
-          deployer-version: "7.5.12"
+          deployer-version: "8.0.5"
           private-key: ${{ secrets.PRIVATE_KEY }}
           options: |
             ssh_multiplexing=false

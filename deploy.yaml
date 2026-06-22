@@ -1,20 +1,22 @@
-import: 
+import:
   - recipe/laravel.php
 
 config:
-  repository: 'git@github.com:matrocheetos/cardapio-api.git'
+  repository: "git@github.com:matrocheetos/cardapio-api.git"
   ssh_multiplexing: false
 
 hosts:
   pratofacil:
     provision_user: ubuntu
     remote_user: deployer
-    deploy_path: '~/cardapio-api'
+    deploy_path: "~/cardapio-api"
     http_user: caddy
 
 tasks:
-  build:
-    - run: uptime  
+  optimize:
+    - cd: { { release_path } }
+    - run: php artisan scramble:cache
 
 after:
   deploy:failed: deploy:unlock
+  artisan:optimize: optimize
