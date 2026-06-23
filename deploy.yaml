@@ -4,7 +4,7 @@ import:
 config:
   repository: "git@github.com:matrocheetos/cardapio-api.git"
   ssh_multiplexing: false
-  keep_releases=5
+  keep_releases: 5
 
 hosts:
   pratofacil:
