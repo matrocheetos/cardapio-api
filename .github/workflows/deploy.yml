@@ -35,6 +35,3 @@ jobs:
           dep: deploy
           deployer-version: "8.0.5"
           private-key: ${{ secrets.PRIVATE_KEY }}
-          options: |
-            ssh_multiplexing=false
-            keep_releases=5

@@ -23,7 +23,7 @@ final class R2StorageService
 
         $path = $basePath.'/'.$filename;
 
-        Storage::put($path, $fileStr, $visibility);
+        Storage::disk('r2')->put($path, $fileStr, $visibility);
 
         return $path;
     }
@@ -34,7 +34,7 @@ final class R2StorageService
     public function delete(?string $path): void
     {
         if ($path) {
-            Storage::delete($path);
+            Storage::disk('r2')->delete($path);
         }
     }
 
@@ -43,8 +43,8 @@ final class R2StorageService
      */
     public function getUrl(string $path): ?string
     {
-        // if (Storage::exists($path)) {
-        //     return Storage::url($path);
+        // if (Storage::disk('r2')->exists($path)) {
+        //     return Storage::disk('r2')->url($path);
         // }
         // return null;
 
@@ -57,7 +57,7 @@ final class R2StorageService
     private function isImage(UploadedFile $file): bool
     {
         $imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        return in_array($file->getMimeType(), $imageTypes);
+        return \in_array($file->getMimeType(), $imageTypes);
     }
 
     /**
