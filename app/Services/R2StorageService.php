@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\Laravel\Facades\Image;
 
 final class R2StorageService
@@ -65,11 +66,11 @@ final class R2StorageService
      */
     private function convertToWebp(UploadedFile $file): string
     {
-        $image = Image::read($file);
+        $image = Image::decode($file);
 
         // qualidade 75%, remove metadados
-        $image = $image->toWebp(75, true);
+        $encoded = $image->encode(new WebpEncoder(75, true));
 
-        return (string) $image;
+        return (string) $encoded;
     }
 }
