@@ -14,8 +14,8 @@ class Pedido extends Model
     protected $fillable = ['comanda', 'id_produto', 'observacao'];
     public $timestamps = true;
 
-    const CREATED_AT = 'data_pedido';
-    const UPDATED_AT = 'data_atualizacao';
+    public const CREATED_AT = 'data_pedido';
+    public const UPDATED_AT = 'data_atualizacao';
 
     public function mesa()
     {

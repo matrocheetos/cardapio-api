@@ -16,7 +16,7 @@ class ProdutoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $storageService = app(R2StorageService::class);
-        
+
         return [
             'id_produto'     => $this->id_produto,
             'id_categoria'   => $this->categoria->id_categoria,

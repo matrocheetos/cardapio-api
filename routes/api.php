@@ -8,7 +8,7 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('cardapio')->group(function() {
+Route::prefix('cardapio')->group(function () {
 
     Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
         Route::get('/', 'lista');

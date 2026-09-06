@@ -12,7 +12,9 @@ use Illuminate\Support\Str;
 
 final class ProdutoController extends ApiController
 {
-    public function __construct(private readonly R2StorageService $storageService) {}
+    public function __construct(private readonly R2StorageService $storageService)
+    {
+    }
 
     /**
      * Retorna todos os produtos
@@ -56,7 +58,10 @@ final class ProdutoController extends ApiController
         if ($request->hasFile('imagem')) {
             $restaurante = 'dev';
             $data['imagem'] = $this->storageService->upload(
-                $request->file('imagem'), Str::uuid(), $restaurante.'/produtos', 'public'
+                $request->file('imagem'),
+                Str::uuid(),
+                $restaurante.'/produtos',
+                'public'
             );
         }
 
@@ -89,7 +94,10 @@ final class ProdutoController extends ApiController
             $this->storageService->delete($path);
 
             $data['imagem'] = $this->storageService->upload(
-                $request->file('imagem'), Str::uuid(), $basePath, 'public'
+                $request->file('imagem'),
+                Str::uuid(),
+                $basePath,
+                'public'
             );
         }
 

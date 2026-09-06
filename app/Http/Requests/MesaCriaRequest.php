@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\StatusPagamentoEnum;
-
 class MesaCriaRequest extends ApiRequest
 {
     /**
